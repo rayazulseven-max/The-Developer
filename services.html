@@ -8,8 +8,12 @@
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #030303; color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .filter-sidebar { width: 250px; background: #0f0f0f; border-right: 1px solid #272727; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
         .catalog-container { flex: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; align-content: start; }
-        .product-card { background: #1a1a1a; border-radius: 8px; border: 1px solid #272727; padding: 20px; transition: 0.2s; cursor: pointer; }
-        .product-card:hover { border-color: #415a77; transform: translateY(-3px); }
+        
+        /* Added a subtle hover state to indicate the cards are clickable! */
+        .product-card { background: #1a1a1a; border-radius: 8px; border: 1px solid #272727; padding: 20px; transition: 0.2s; cursor: pointer; position: relative; }
+        .product-card:hover { border-color: #415a77; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .product-card:active { transform: translateY(0); }
+        
         .product-price { color: #415a77; font-weight: bold; font-size: 1.2em; margin: 10px 0; }
         .ai-sidebar { width: 350px; background: #0f0f0f; border-left: 1px solid #272727; display: flex; flex-direction: column; }
         .chat-header { padding: 20px; border-bottom: 1px solid #272727; font-weight: bold; color: #415a77; letter-spacing: 1px; }
@@ -30,6 +34,7 @@
             .catalog-container { padding: 20px; overflow: visible; }
             .ai-sidebar { width: 100%; border-left: none; border-top: 1px solid #272727; height: 600px; box-sizing: border-box; }
         }
+
         /* 5. Contact Modal Styling */
         .modal { 
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
@@ -44,7 +49,7 @@
        .close-btn { 
             position: absolute; top: 15px; right: 20px; color: #888; 
             font-size: 1.5em; cursor: pointer; background: transparent; border: none; 
-            width: auto; padding: 0; /* Forces it to stay small */
+            width: auto; padding: 0; 
         }
         .close-btn:hover { color: white; }
         .modal h2 { margin-top: 0; margin-bottom: 5px; color: #fff; letter-spacing: 1px; }
@@ -54,7 +59,7 @@
             padding: 12px; border-radius: 6px; box-sizing: border-box; font-family: inherit; 
         }
         .modal textarea { resize: vertical; min-height: 100px; }
-        /* Changed to target ONLY the submit button inside the form */
+        
         .modal form button { 
             background: #415a77; color: white; border: none; padding: 12px; 
             border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1em; transition: 0.2s;
@@ -97,16 +102,17 @@
             <button onclick="sendMessage()">SEND</button>
         </div>
     </aside>
-<div id="contactModal" class="modal">
+
+    <div id="contactModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal()">&times;</button>
             <h2>Request a Quote</h2>
             <p>Send Ray a message with your project details, and he will get back to you shortly.</p>
             
-            <form id="contactForm" onsubmit="submitForm(event)">
-                <input type="text" id="name" name="name" placeholder="First & Last Name" required>
-                <input type="email" id="email" name="email" placeholder="Your Email" required>
-                <textarea id="message" name="message" placeholder="How can I help you?" required></textarea>
+            <form onsubmit="submitForm(event, 'contactModal')">
+                <input type="text" name="name" placeholder="First & Last Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" placeholder="How can I help you?" required></textarea>
                 <button type="submit">Send Message</button>
             </form>
             
@@ -116,6 +122,31 @@
             </div>
         </div>
     </div>
+
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeOrderModal()">&times;</button>
+            <h2>Order Service</h2>
+            <p>Please fill out your details and any special requests below.</p>
+            
+            <form onsubmit="submitForm(event, 'orderModal')">
+                <input type="text" name="name" placeholder="First & Last Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                
+                <input type="text" id="orderProduct" name="product" readonly style="color: #ccc; background: #222; border-color: #444; font-weight: bold;" required>
+                
+                <textarea name="special_request" placeholder="Add a special request or project details (Optional)..."></textarea>
+                
+                <button type="submit">Submit Order</button>
+            </form>
+            
+            <div class="contact-info">
+                Or reach out directly:<br>
+                <strong style="color: #ddd;">rayazulseven@gmail.com</strong> | <strong style="color: #ddd;">(512) 829-8824</strong>
+            </div>
+        </div>
+    </div>
+
 <script>
     let services = [];
 
@@ -128,8 +159,13 @@
 
     function renderServices(data) {
         const grid = document.getElementById('serviceGrid');
-        grid.innerHTML = data.map(s => `
-            <div class="product-card">
+        
+        // Notice we added the onclick event dynamically using the service name!
+        grid.innerHTML = data.map(s => {
+            // This safely handles any product names that have apostrophes in them
+            const safeName = s.name.replace(/'/g, "\\'"); 
+            return `
+            <div class="product-card" onclick="openOrderModal('${safeName}')">
                 <div style="font-size: 0.7em; color: #888;">${s.category}</div>
                 <h3 style="margin: 5px 0;">${s.name}</h3>
                 <div class="product-price">$${s.price}</div>
@@ -138,7 +174,8 @@
                     ${s.tags.map(t => `<span style="background: #222; padding: 2px 6px; border-radius: 4px; margin-right: 5px; display: inline-block;">${t}</span>`).join('')}
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
     function filterServices() {
@@ -169,7 +206,6 @@
             if (match) {
                 window.innerHTML += `<div class="msg bot">I found a match! The <strong>${match.name}</strong> package is $${match.price}. It includes ${match.description}</div>`;
             } else {
-                // CHANGED: The link now triggers the openModal() function!
                 window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" onclick="openModal(); return false;" style="color: #415a77;">Contact Us</a></strong> form to get a custom quote!</div>`;
             }
             window.scrollTop = window.scrollHeight;
@@ -181,26 +217,33 @@
     function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
     function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
     
-    // Close modal if user clicks the dark background outside of it
+    function openOrderModal(productName) { 
+        // This is where the magic happens: it pre-fills the input box with the product name
+        document.getElementById('orderProduct').value = "I'd like to order: " + productName;
+        document.getElementById('orderModal').style.display = 'flex'; 
+    }
+    function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+    
+    // Close whichever modal is open if the user clicks the dark background
     window.onclick = function(event) {
-        const modal = document.getElementById('contactModal');
-        if (event.target === modal) { closeModal(); }
+        const contactModal = document.getElementById('contactModal');
+        const orderModal = document.getElementById('orderModal');
+        if (event.target === contactModal) { closeModal(); }
+        if (event.target === orderModal) { closeOrderModal(); }
     }
 
-    async function submitForm(event) {
+    async function submitForm(event, modalId) {
         event.preventDefault(); 
         
         const form = event.target;
         const btn = form.querySelector('button');
         const originalText = btn.innerText;
         
-        // Show loading state
         btn.innerText = "Sending...";
         
         const data = new FormData(form);
 
         try {
-            // PASTE YOUR FORMSPREE ENDPOINT URL RIGHT HERE:
             const response = await fetch("https://formspree.io/f/xvzwbvwv", {
                 method: "POST",
                 body: data,
@@ -208,12 +251,12 @@
             });
 
             if (response.ok) {
-                // Success! Trigger the green checkmark UI
-                btn.innerText = "Message Sent! ✓";
+                btn.innerText = "Sent! ✓";
                 btn.style.background = "#2e7d32"; 
                 
                 setTimeout(() => {
-                    closeModal();
+                    // Uses the dynamically passed modalId to close the correct window
+                    document.getElementById(modalId).style.display = 'none';
                     btn.innerText = originalText;
                     btn.style.background = "#415a77";
                     form.reset(); 
