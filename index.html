@@ -280,8 +280,10 @@
             .then(data => {
                 catalogData = data;
                 currentPlaylist = data; 
-                filterCatalog(); // Initialize logic
-                renderTagFilters();
+                
+                // FLIPPED THE ORDER HERE:
+                renderTagFilters(); // 1. Build the buttons first!
+                filterCatalog();    // 2. Then run the filter logic.
             })
             .catch(err => console.error("Error loading the catalog:", err));
 
