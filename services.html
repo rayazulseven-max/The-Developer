@@ -23,6 +23,34 @@
         .back-link { color: #888; text-decoration: none; font-size: 0.8em; font-weight: bold; }
         .back-link:hover { color: white; }
     </style>
+            /* 4. Mobile Adjustments */
+        @media (max-width: 900px) {
+            body { 
+                flex-direction: column; 
+                overflow-y: auto; 
+                height: auto; 
+            }
+            .filter-sidebar { 
+                width: 100%; 
+                border-right: none; 
+                border-bottom: 1px solid #272727; 
+                padding: 20px; 
+                box-sizing: border-box; 
+                height: auto;
+            }
+            .catalog-container { 
+                padding: 20px; 
+                overflow: visible; 
+            }
+            .ai-sidebar { 
+                width: 100%; 
+                border-left: none; 
+                border-top: 1px solid #272727; 
+                height: 600px; /* Gives the chat window plenty of room */
+                box-sizing: border-box; 
+            }
+        }
+
 </head>
 <body>
 
