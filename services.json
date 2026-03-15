@@ -22,5 +22,53 @@
     "price": 800,
     "description": "RAG-based chatbot deployment using existing JSON databases.",
     "tags": ["Chatbots", "API", "Customer Service"]
+  },
+  {
+    "id": "svc_004",
+    "name": "Predictive Churn Analysis Model",
+    "category": "Data Analytics",
+    "price": 2000,
+    "description": "Machine learning model to identify at-risk customers before they leave.",
+    "tags": ["Machine Learning", "Python", "Predictive"]
+  },
+  {
+    "id": "svc_005",
+    "name": "Interactive Business Dashboard",
+    "category": "Data Analytics",
+    "price": 1500,
+    "description": "Custom data visualization dashboards to track real-time business metrics.",
+    "tags": ["Data Visualization", "BI", "Analytics"]
+  },
+  {
+    "id": "svc_006",
+    "name": "OSINT Data Harvesting Pipeline",
+    "category": "Data Collection",
+    "price": 1100,
+    "description": "Automated web scraping and open-source intelligence gathering scripts.",
+    "tags": ["OSINT", "Python", "Web Scraping"]
+  },
+  {
+    "id": "svc_007",
+    "name": "SQL Database Optimization",
+    "category": "Data Engineering",
+    "price": 1200,
+    "description": "Query auditing and schema restructuring to improve database performance.",
+    "tags": ["SQL", "Database", "Performance"]
+  },
+  {
+    "id": "svc_008",
+    "name": "Exploratory Data Analysis Report",
+    "category": "Data Analytics",
+    "price": 800,
+    "description": "Deep-dive statistical analysis into raw datasets to uncover hidden trends.",
+    "tags": ["Python", "Pandas", "EDA"]
+  },
+  {
+    "id": "svc_009",
+    "name": "Automated KPI Reporting Script",
+    "category": "Automation",
+    "price": 600,
+    "description": "Custom Python scripts to automatically generate and email weekly KPI reports.",
+    "tags": ["Python", "Automation", "Reporting"]
   }
 ]
