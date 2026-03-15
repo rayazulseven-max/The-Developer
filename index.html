@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>221st Street Music | Searchable Catalog</title>
+    <title>Ray Azul Perez | AI Developer Portfolio</title>
     <style>
     /* 1. Dark Mode Background */
     body { 
@@ -27,7 +27,15 @@
         z-index: 1200; padding: 15px 0; text-align: center;
         box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
-    .brand-logo { max-width: 250px; height: auto; display: inline-block; }
+    
+    .brand-logo-text {
+        color: #ffffff;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
 
     /* Header Home Link Styling */
     .home-link {
@@ -35,15 +43,15 @@
         left: 15px;
         top: 50%;
         transform: translateY(-50%);
-        color: #ffffff;
+        color: #415a77;
         text-decoration: none;
         font-size: 16px;
         font-weight: bold;
         transition: opacity 0.2s;
     }
-    .home-link:hover { opacity: 0.7; }
+    .home-link:hover { opacity: 0.7; color: #ffffff; }
 
-    .footer-logo-link { display: contents; }
+    .footer-logo-link { display: contents; text-decoration: none; }
         
     /* 3. Layout Spacing */
     .container { max-width: 1000px; width: 100%; padding-top: 150px; }
@@ -71,17 +79,17 @@
         cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; border-left: 5px solid transparent; 
         -webkit-tap-highlight-color: transparent;
     }
-    .song-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left-color: #007bff; }
+    .song-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left-color: #415a77; }
     
-    /* The Custom Victor Perez Tap Flash */
+    /* The Custom Tap Flash */
     .song-item:active { background-color: #e6f2ff; transform: scale(0.98); }
-    .song-item.active-playing { border-left: 5px solid #007bff; background: #f0f8ff; }
+    .song-item.active-playing { border-left: 5px solid #415a77; background: #f0f8ff; }
     
     .song-info { flex: 1; padding-right: 20px; }
     .song-info h3 { margin: 0; font-size: 1.1em; color: #333; }
     .song-info p { margin: 5px 0 0 0; font-size: 0.9em; color: #666; }
     
-    .play-indicator { font-weight: bold; color: #007bff; flex-shrink: 0; white-space: nowrap; text-align: right; }
+    .play-indicator { font-weight: bold; color: #415a77; flex-shrink: 0; white-space: nowrap; text-align: right; }
 
     /* 6. Player & Lyrics Pane */
     .master-player { 
@@ -97,7 +105,7 @@
         margin-top: 15px; font-size: 0.95em; color: #ccc; 
         display: flex; align-items: center; justify-content: center; gap: 8px; 
     }
-    .autoplay-toggle input[type="checkbox"] { cursor: pointer; accent-color: #007bff; width: 16px; height: 16px; margin: 0; }
+    .autoplay-toggle input[type="checkbox"] { cursor: pointer; accent-color: #415a77; width: 16px; height: 16px; margin: 0; }
     .autoplay-toggle label { cursor: pointer; user-select: none; }
 
     .lyrics-pane {
@@ -106,7 +114,7 @@
         position: relative;
     }
     .lyrics-pane::before {
-        content: "221st STREET MUSIC - PROPRIETARY";
+        content: "V.I. PEREZ - PORTFOLIO DEMO";
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
         font-size: 2rem; font-weight: bold; color: rgba(0, 0, 0, 0.04);
         pointer-events: none; white-space: nowrap; z-index: 1; letter-spacing: 4px;
@@ -115,23 +123,23 @@
     /* 7. Tags & Disclaimer */
     .tag-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: flex-start; }
     .tag-btn { background: #fff; color: #333; border: 1px solid #ddd; border-radius: 20px; padding: 8px 16px; font-size: 0.9em; cursor: pointer; transition: all 0.2s; }
-    .tag-btn.active { background: #007bff; color: white; border-color: #007bff; }
+    .tag-btn.active { background: #415a77; color: white; border-color: #415a77; }
     .disclaimer { font-size: 0.75em; color: #aaaaaa; margin-top: 15px; text-align: justify; line-height: 1.4; }
 
-    /* 8. Custom Footer */
+    /* 8. Custom Footer - Azul Blue Gradient */
     .app-footer {
         position: fixed; bottom: 0; left: 0; width: 100%; 
-        background: linear-gradient(to bottom, #450F0C, #7C1716); 
+        background: linear-gradient(to bottom, #0d1b2a, #1b263b); 
         color: white; padding: 15px 20px calc(15px + env(safe-area-inset-bottom)); 
-        border-top: 3px solid #ffffff; 
+        border-top: 3px solid #415a77; 
         box-sizing: border-box; font-size: 0.85em;
         z-index: 1300; 
     }
     .footer-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; }
-    .footer-logo { height: 120px; width: auto; position: absolute; left: 50%; transform: translateX(-50%); top: -53px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); }
-    .footer-copyright { flex: 1; text-align: left; padding-right: 80px; } 
-    .footer-contact { flex: 1; text-align: right; line-height: 1.5; padding-left: 80px; }
-    .footer-contact a { color: #ffcccc; text-decoration: none; }
+    .footer-copyright { flex: 1; text-align: left; padding-right: 20px; } 
+    .footer-center { flex: 1; text-align: center; font-weight: bold; letter-spacing: 2px; color: #e0e1dd; }
+    .footer-contact { flex: 1; text-align: right; line-height: 1.5; padding-left: 20px; }
+    .footer-contact a { color: #778da9; text-decoration: none; font-weight: bold; }
 
     /* 9. Mobile Adjustments */
     @media (max-width: 800px) {
@@ -152,9 +160,9 @@
         .list-section { margin-top: 210px; }
 
         .app-footer { position: static; margin-top: 30px; margin-left: -20px; width: 100vw; }
-        .footer-logo { position: static; transform: none; display: block; margin: 0 auto 15px auto; }
         .footer-content { flex-direction: column; text-align: center; gap: 10px; }
         .footer-copyright, .footer-contact { text-align: center; padding: 0; }
+        .footer-center { margin: 10px 0; }
     }
 
     /* Custom Scrollbar for Lyrics Pane */
@@ -168,8 +176,8 @@
 
 <div class="container">
     <div class="brand-header">
-        <a href="https://221street.com/" class="home-link">&lt; Home</a>
-        <img src="logo.png" alt="221st Street Publishing" class="brand-logo">
+        <a href="https://github.com/rayazulseven-max" class="home-link" target="_blank">&lt; GitHub</a>
+        <h2 class="brand-logo-text">RAY AZUL PEREZ</h2>
     </div>
     
     <div class="main-content">
@@ -179,10 +187,9 @@
                 <input type="text" id="searchBar" placeholder="Search name or writer..." onkeyup="filterCatalog()">
                 <select id="genreFilter" onchange="filterCatalog()">
                     <option value="All">All Genres</option>
-                    <option value="Bluegrass Gospel">Bluegrass Gospel</option>
-                    <option value="Contemporary Gospel">Contemporary Gospel</option>
-                    <option value="Country Gospel">Country Gospel</option>
-                    <option value="Southern Gospel">Southern Gospel</option>
+                    <option value="Electronic">Electronic</option>
+                    <option value="Cinematic">Cinematic</option>
+                    <option value="Acoustic">Acoustic</option>
                 </select>
             </div>
             <div id="tagContainer" class="tag-filters"> </div>
@@ -192,7 +199,7 @@
         <div class="lyrics-section">
             <div class="master-player">
                 <h3 id="now-playing-title">Select a track to listen</h3>
-                <p id="now-playing-writer">Writer Information</p>
+                <p id="now-playing-writer">Creator Information</p>
                 <audio id="mainAudio" controls>
                     <source id="audioSource" src="" type="audio/mpeg">
                     Your browser does not support the audio element.
@@ -203,26 +210,26 @@
                 </div>
             </div>
 
-            <h3>Lyrics</h3>
-            <div id="lyrics-pane" class="lyrics-pane">Select a song to view lyrics...</div>
+            <h3>Details / Lyrics</h3>
+            <div id="lyrics-pane" class="lyrics-pane">Select a track to view details...</div>
             
-            <p class="disclaimer">All compositions are the intellectual property of their creator(s) and are protected by international copyright law. No part of these composition(s) may be used in any form or for any purpose without first obtaining proper licensing and/or by getting expressed written permission from the copyright owner(s).</p>
+            <p class="disclaimer"><strong>Technical Demonstration:</strong> This dynamic interface was developed by Ray Azul Perez to showcase interactive UI/UX design and data parsing capabilities. The audio tracks featured are generated via AI and are attributed to V.I. Perez. This catalog is for portfolio and demonstration purposes only.</p>
         </div>
     </div>
 </div> 
     <footer class="app-footer">
         <div class="footer-content">
             <div class="footer-copyright">
-                &copy;2026 - 221st Street Music LLC.<br>
+                &copy;2026 - V.I. Perez<br>
                 All rights reserved.
             </div>
-            <a href="https://221street.com/" class="footer-logo-link">
-                <img src="logo.png" alt="221st Street Publishing" class="footer-logo">
-            </a>
+            <div class="footer-center">
+                AI DEVELOPMENT PORTFOLIO
+            </div>
             <div class="footer-contact">
-                <strong>Contact us:</strong><br>
-                918.607.3046<br>
-                <a href="mailto:info@221street.com">info@221street.com</a>
+                <strong>Ray Azul Perez</strong><br>
+                Developer / Engineer<br>
+                <a href="https://github.com/rayazulseven-max" target="_blank">View GitHub Profile</a>
             </div>
         </div>
     </footer>
@@ -249,7 +256,7 @@
             if (autoplayEnabled && currentSongIndex !== -1 && currentSongIndex < currentPlaylist.length - 1) {
                 const nextSong = currentPlaylist[currentSongIndex + 1];
                 const writers = nextSong.writers.join(', ');
-                playTrack(nextSong.title, writers, nextSong.file, nextSong.lyrics || "Lyrics coming soon!");
+                playTrack(nextSong.title, writers, nextSong.file, nextSong.lyrics || "Details coming soon!");
             }
         });
     });
@@ -270,11 +277,11 @@
                 li.classList.add('active-playing');
             }
 
-            li.onclick = () => playTrack(song.title, writers, song.file, song.lyrics || "Lyrics coming soon!");
+            li.onclick = () => playTrack(song.title, writers, song.file, song.lyrics || "Details coming soon!");
             li.innerHTML = `
                 <div class="song-info">
                     <h3>${song.title}</h3>
-                    <p>Writers: ${writers} | Genre: ${song.genre}</p>
+                    <p>Creator: ${writers} | Genre: ${song.genre}</p>
                 </div>
                 <div class="play-indicator">▶ PLAY</div>
             `;
@@ -291,7 +298,7 @@
 
         source.src = encodeURI("audio/" + fileName);
         titleEl.innerText = title;
-        writerEl.innerText = "Writers: " + writers;
+        writerEl.innerText = "Creator: " + writers;
         lyricsEl.innerText = lyrics; 
         lyricsEl.scrollTop = 0; 
 
