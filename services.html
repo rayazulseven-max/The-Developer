@@ -30,6 +30,35 @@
             .catalog-container { padding: 20px; overflow: visible; }
             .ai-sidebar { width: 100%; border-left: none; border-top: 1px solid #272727; height: 600px; box-sizing: border-box; }
         }
+        /* 5. Contact Modal Styling */
+        .modal { 
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); 
+            align-items: center; justify-content: center; backdrop-filter: blur(5px); 
+        }
+        .modal-content { 
+            background: #0f0f0f; padding: 30px; border: 1px solid #272727; 
+            border-radius: 12px; width: 90%; max-width: 400px; position: relative; 
+            display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .close-btn { 
+            position: absolute; top: 15px; right: 20px; color: #888; 
+            font-size: 1.5em; cursor: pointer; background: none; border: none; 
+        }
+        .close-btn:hover { color: white; }
+        .modal h2 { margin-top: 0; margin-bottom: 5px; color: #fff; letter-spacing: 1px; }
+        .modal p { font-size: 0.85em; color: #aaa; margin: 0 0 10px 0; line-height: 1.4; }
+        .modal input, .modal textarea { 
+            width: 100%; background: #1a1a1a; border: 1px solid #333; color: white; 
+            padding: 12px; border-radius: 6px; box-sizing: border-box; font-family: inherit; 
+        }
+        .modal textarea { resize: vertical; min-height: 100px; }
+        .modal button { 
+            background: #415a77; color: white; border: none; padding: 12px; 
+            border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1em; transition: 0.2s;
+        }
+        .modal button:hover { background: #527196; }
+        .contact-info { margin-top: 15px; font-size: 0.8em; color: #888; text-align: center; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -66,7 +95,25 @@
             <button onclick="sendMessage()">SEND</button>
         </div>
     </aside>
-
+<div id="contactModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2>Request a Quote</h2>
+            <p>Send Ray a message with your project details, and he will get back to you shortly.</p>
+            
+            <form id="contactForm" onsubmit="submitForm(event)">
+                <input type="text" id="name" placeholder="First & Last Name" required>
+                <input type="email" id="email" placeholder="Your Email" required>
+                <textarea id="message" placeholder="How can I help you?" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+            
+            <div class="contact-info">
+                Or reach out directly:<br>
+                <strong style="color: #ddd;">rayazulseven@gmail.com</strong> | <strong style="color: #ddd;">(512) 829-8824</strong>
+            </div>
+        </div>
+    </div>
 <script>
     let services = [];
 
@@ -74,7 +121,7 @@
         .then(res => res.json())
         .then(data => {
             services = data;
-            renderServices(data); // Initial load of all services
+            renderServices(data);
         });
 
     function renderServices(data) {
@@ -92,23 +139,17 @@
         `).join('');
     }
 
-    // New Filtering Logic
     function filterServices() {
         const query = document.getElementById('serviceSearch').value.toLowerCase();
         const category = document.getElementById('categoryFilter').value;
 
         const filtered = services.filter(s => {
-            // Check if the search text matches the name, description, or tags
             const matchesText = s.name.toLowerCase().includes(query) || 
                                 s.description.toLowerCase().includes(query) ||
                                 s.tags.some(t => t.toLowerCase().includes(query));
-            
-            // Check if the category dropdown matches
             const matchesCategory = (category === "All") ? true : (s.category === category);
-
             return matchesText && matchesCategory;
         });
-
         renderServices(filtered);
     }
 
@@ -118,22 +159,48 @@
         const query = input.value.toLowerCase();
         if(!query) return;
 
-        // User Message
         window.innerHTML += `<div class="msg user">${input.value}</div>`;
         
-        // Bot Logic (RAG Simulation)
         setTimeout(() => {
             const match = services.find(s => query.includes(s.name.toLowerCase()) || s.tags.some(t => query.includes(t.toLowerCase())));
             
             if (match) {
                 window.innerHTML += `<div class="msg bot">I found a match! The <strong>${match.name}</strong> package is $${match.price}. It includes ${match.description}</div>`;
             } else {
-                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" style="color: #415a77;">Contact Us</a></strong> page to get a custom quote!</div>`;
+                // CHANGED: The link now triggers the openModal() function!
+                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" onclick="openModal(); return false;" style="color: #415a77;">Contact Us</a></strong> form to get a custom quote!</div>`;
             }
             window.scrollTop = window.scrollHeight;
         }, 600);
-
         input.value = '';
+    }
+
+    // --- Modal Logic ---
+    function openModal() { document.getElementById('contactModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
+    
+    // Close modal if user clicks the dark background outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('contactModal');
+        if (event.target === modal) { closeModal(); }
+    }
+
+    function submitForm(event) {
+        event.preventDefault(); // Prevents the page from refreshing
+        
+        const btn = event.target.querySelector('button');
+        const originalText = btn.innerText;
+        
+        // UI Feedback for the Demo
+        btn.innerText = "Message Sent! ✓";
+        btn.style.background = "#2e7d32"; // Turns green
+        
+        setTimeout(() => {
+            closeModal();
+            btn.innerText = originalText;
+            btn.style.background = "#415a77";
+            event.target.reset(); // Clears the form fields
+        }, 2000);
     }
 </script>
 </body>
