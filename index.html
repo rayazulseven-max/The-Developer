@@ -43,13 +43,19 @@
     
     .developer-tag { font-size: 0.8em; color: #aaaaaa; margin: 0; letter-spacing: 1px; }
     
+    .social-links { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 10px; 
+        margin-top: -10px; 
+    }
+    
     .sidebar-link {
         color: #aaaaaa;
         text-decoration: none;
         font-weight: bold;
         font-size: 0.9em;
         transition: color 0.2s;
-        margin-top: -10px;
         display: inline-block;
     }
     .sidebar-link:hover { color: #ffffff; }
@@ -190,7 +196,10 @@
         <p class="developer-tag">AI Developer Portfolio</p>
     </div>
     
-    <a href="https://github.com/rayazulseven-max" class="sidebar-link" target="_blank">View GitHub Profile ↗</a>
+   <div class="social-links">
+        <a href="https://github.com/rayazulseven-max" class="sidebar-link" target="_blank">View GitHub Profile ↗</a>
+        <a href="https://www.linkedin.com/in/ray-azul-dev/" class="sidebar-link" target="_blank">View LinkedIn Profile ↗</a>
+    </div>
     
     <div class="controls">
         <input type="text" id="searchBar" placeholder="Search tracks or creators..." onkeyup="filterCatalog('user')">
