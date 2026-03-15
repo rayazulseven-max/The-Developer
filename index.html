@@ -487,6 +487,9 @@
             return matchesText && matchesGenre && matchesTag && matchesAlbum;
         });
         
+        // ADD THIS NEW LINE RIGHT HERE:
+        filtered.sort((a, b) => a.track - b.track);
+        
         currentPlaylist = filtered;
         displaySongs(currentPlaylist);
     }
