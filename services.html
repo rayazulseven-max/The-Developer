@@ -41,9 +41,10 @@
             border-radius: 12px; width: 90%; max-width: 400px; position: relative; 
             display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .close-btn { 
+       .close-btn { 
             position: absolute; top: 15px; right: 20px; color: #888; 
-            font-size: 1.5em; cursor: pointer; background: none; border: none; 
+            font-size: 1.5em; cursor: pointer; background: transparent; border: none; 
+            width: auto; padding: 0; /* Forces it to stay small */
         }
         .close-btn:hover { color: white; }
         .modal h2 { margin-top: 0; margin-bottom: 5px; color: #fff; letter-spacing: 1px; }
@@ -53,11 +54,12 @@
             padding: 12px; border-radius: 6px; box-sizing: border-box; font-family: inherit; 
         }
         .modal textarea { resize: vertical; min-height: 100px; }
-        .modal button { 
+        /* Changed to target ONLY the submit button inside the form */
+        .modal form button { 
             background: #415a77; color: white; border: none; padding: 12px; 
             border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1em; transition: 0.2s;
         }
-        .modal button:hover { background: #527196; }
+        .modal form button:hover { background: #527196; }
         .contact-info { margin-top: 15px; font-size: 0.8em; color: #888; text-align: center; line-height: 1.6; }
     </style>
 </head>
