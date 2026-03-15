@@ -1,0 +1,26 @@
+[
+  {
+    "id": "svc_001",
+    "name": "Custom AI Model Training",
+    "category": "AI Development",
+    "price": 2500,
+    "description": "Specialized LLM fine-tuning for niche industry datasets.",
+    "tags": ["Python", "Machine Learning", "Enterprise"]
+  },
+  {
+    "id": "svc_002",
+    "name": "Dark Mode UI Overhaul",
+    "category": "Web Design",
+    "price": 1200,
+    "description": "Transforming legacy HTML sites into modern, responsive dark-mode apps.",
+    "tags": ["Modernization", "UX/UI", "CSS3"]
+  },
+  {
+    "id": "svc_003",
+    "name": "Automated CS Agent Integration",
+    "category": "Automation",
+    "price": 800,
+    "description": "RAG-based chatbot deployment using existing JSON databases.",
+    "tags": ["Chatbots", "API", "Customer Service"]
+  }
+]
