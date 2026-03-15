@@ -1,6 +1,7 @@
 [
   {
     "title": "808 Sleigh Ride",
+    "album": "Christmas Pulse (크리스마스 리듬)",
     "writers": ["V.I. Perez"],
     "genre": "K-Pop Dance",
     "tags": ["High BPM", "808", "Duet", "Holiday"],
@@ -9,6 +10,7 @@
   },
   {
     "title": "Box of Us",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Acoustic / Ballad",
     "tags": ["Slow Tempo", "Acoustic", "Duet"],
@@ -17,6 +19,7 @@
   },
   {
     "title": "Catch! The! Freeze!",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Eurodance",
     "tags": ["High BPM", "Bubblegum", "Pop"],
@@ -25,6 +28,7 @@
   },
   {
     "title": "Frozen Christmas",
+    "album": "Christmas Pulse (크리스마스 리듬)",
     "writers": ["V.I. Perez"],
     "genre": "Acoustic / Ballad",
     "tags": ["808", "Duet", "Moody"],
@@ -33,6 +37,7 @@
   },
   {
     "title": "Merry-Go-Round Christmas",
+    "album": "Christmas Pulse (크리스마스 리듬)",
     "writers": ["V.I. Perez"],
     "genre": "K-Pop Dance",
     "tags": ["High BPM", "Pop", "Cheerful"],
@@ -41,6 +46,7 @@
   },
   {
     "title": "Midnight Countdown",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Hard Electronic",
     "tags": ["High BPM", "808", "Aggressive"],
@@ -49,6 +55,7 @@
   },
   {
     "title": "Retro Holiday '97",
+    "album": "Christmas Pulse (크리스마스 리듬)",
     "writers": ["V.I. Perez"],
     "genre": "Retro Synth-Pop",
     "tags": ["Retro", "Duet", "Cheerful"],
@@ -57,6 +64,7 @@
   },
   {
     "title": "Snowflake Drop",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Eurodance",
     "tags": ["High BPM", "Bubblegum", "House"],
@@ -65,6 +73,7 @@
   },
   {
     "title": "Sugar Rush Snow",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Eurodance",
     "tags": ["High BPM", "Bubblegum", "Pop"],
@@ -73,6 +82,7 @@
   },
   {
     "title": "Warm Cocoa Duet",
+    "album": "Christmas Pulse (크리스마스 리듬)",
     "writers": ["V.I. Perez"],
     "genre": "K-Pop Dance",
     "tags": ["High BPM", "808", "Duet", "Holiday"],
@@ -81,6 +91,7 @@
   },
   {
     "title": "Winter Star-Light",
+    "album": "Winter Box",
     "writers": ["V.I. Perez"],
     "genre": "Retro Synth-Pop",
     "tags": ["Synth-Pop", "Duet", "Dreamy"],
