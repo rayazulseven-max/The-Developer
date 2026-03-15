@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>221st Street Music | Searchable Catalog</title>
+    <style>
+    /* 1. Dark Mode Background */
+    body { 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        background-color: #121212; 
+        color: #ffffff; 
+        margin: 0; 
+        padding: 0 20px 100px 20px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* 2. Dark Header */
+    .brand-header {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background-color: rgba(18, 18, 18, 0.95);
+        z-index: 1200; padding: 15px 0; text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .brand-logo { max-width: 250px; height: auto; display: inline-block; }
+
+    /* Header Home Link Styling */
+    .home-link {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: opacity 0.2s;
+    }
+    .home-link:hover { opacity: 0.7; }
+
+    .footer-logo-link { display: contents; }
+        
+    /* 3. Layout Spacing */
+    .container { max-width: 1000px; width: 100%; padding-top: 150px; }
+    h1 { text-align: center; margin-bottom: 30px; color: #ffffff; }
+    .main-content { display: flex; gap: 30px; width: 100%; align-items: flex-start; }
+    .list-section { flex: 1.5; } 
+    .lyrics-section { flex: 1; position: sticky; top: 120px; }
+
+    /* 4. Controls & Inputs */
+    .controls { display: flex; gap: 10px; margin-bottom: 15px; } 
+    input[type="text"], select { 
+        padding: 15px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; 
+        background: white; color: #333; outline: none; 
+    }
+    input[type="text"] { flex-grow: 1; user-select: text; -webkit-user-select: text; }
+    select { cursor: pointer; }
+
+    .result-count { font-size: 0.85em; color: #aaaaaa; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }    
+
+    /* 5. Song Cards */
+    .song-list { list-style: none; padding: 0; margin: 0; }
+    .song-item { 
+        background: white; color: #333; padding: 20px; margin-bottom: 12px; border-radius: 8px; 
+        display: flex; justify-content: space-between; align-items: center; 
+        cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; border-left: 5px solid transparent; 
+        -webkit-tap-highlight-color: transparent;
+    }
+    .song-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left-color: #007bff; }
+    
+    /* The Custom Victor Perez Tap Flash */
+    .song-item:active { background-color: #e6f2ff; transform: scale(0.98); }
+    .song-item.active-playing { border-left: 5px solid #007bff; background: #f0f8ff; }
+    
+    .song-info { flex: 1; padding-right: 20px; }
+    .song-info h3 { margin: 0; font-size: 1.1em; color: #333; }
+    .song-info p { margin: 5px 0 0 0; font-size: 0.9em; color: #666; }
+    
+    .play-indicator { font-weight: bold; color: #007bff; flex-shrink: 0; white-space: nowrap; text-align: right; }
+
+    /* 6. Player & Lyrics Pane */
+    .master-player { 
+        background: #1a1a1a; color: white; padding: 20px 25px; text-align: center; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 20px;
+    }
+    #now-playing-title { margin: 0 0 5px 0; font-size: 1.2em; }
+    #now-playing-writer { margin: 0 0 15px 0; font-size: 0.9em; color: #aaa; }
+    audio { width: 100%; max-width: 700px; outline: none; }
+
+    /* V2.0 Autoplay Toggle Styling */
+    .autoplay-toggle { 
+        margin-top: 15px; font-size: 0.95em; color: #ccc; 
+        display: flex; align-items: center; justify-content: center; gap: 8px; 
+    }
+    .autoplay-toggle input[type="checkbox"] { cursor: pointer; accent-color: #007bff; width: 16px; height: 16px; margin: 0; }
+    .autoplay-toggle label { cursor: pointer; user-select: none; }
+
+    .lyrics-pane {
+        background: white; color: #333; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        white-space: pre-wrap; max-height: 500px; overflow-y: auto; overflow-x: hidden; font-size: 1em; line-height: 1.6;
+        position: relative;
+    }
+    .lyrics-pane::before {
+        content: "221st STREET MUSIC - PROPRIETARY";
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 2rem; font-weight: bold; color: rgba(0, 0, 0, 0.04);
+        pointer-events: none; white-space: nowrap; z-index: 1; letter-spacing: 4px;
+    }
+
+    /* 7. Tags & Disclaimer */
+    .tag-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: flex-start; }
+    .tag-btn { background: #fff; color: #333; border: 1px solid #ddd; border-radius: 20px; padding: 8px 16px; font-size: 0.9em; cursor: pointer; transition: all 0.2s; }
+    .tag-btn.active { background: #007bff; color: white; border-color: #007bff; }
+    .disclaimer { font-size: 0.75em; color: #aaaaaa; margin-top: 15px; text-align: justify; line-height: 1.4; }
+
+    /* 8. Custom Footer */
+    .app-footer {
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: linear-gradient(to bottom, #450F0C, #7C1716); 
+        color: white; padding: 15px 20px calc(15px + env(safe-area-inset-bottom)); 
+        border-top: 3px solid #ffffff; 
+        box-sizing: border-box; font-size: 0.85em;
+        z-index: 1300; 
+    }
+    .footer-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; }
+    .footer-logo { height: 120px; width: auto; position: absolute; left: 50%; transform: translateX(-50%); top: -53px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); }
+    .footer-copyright { flex: 1; text-align: left; padding-right: 80px; } 
+    .footer-contact { flex: 1; text-align: right; line-height: 1.5; padding-left: 80px; }
+    .footer-contact a { color: #ffcccc; text-decoration: none; }
+
+    /* 9. Mobile Adjustments */
+    @media (max-width: 800px) {
+        .controls { flex-direction: column; }
+        .container { width: 100%; padding-top: 180px; box-sizing: border-box; } 
+        .main-content { flex-direction: column; }
+        .lyrics-section { width: 100%; position: static; margin-top: 20px; }
+        .brand-header { display: none; } 
+        .lyrics-pane { max-height: none; }
+        
+        .master-player {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; border-radius: 0; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); height: auto; max-height: 200px; padding: 12px 20px; overflow: hidden; 
+            box-sizing: border-box; 
+        }
+        #now-playing-writer { white-space: normal; display: block; width: 100%; max-height: 50px; overflow-y: auto; margin-top: 5px; font-size: 0.8em; color: #aaa; padding-right: 5px; }
+        .autoplay-toggle { margin-top: 10px; }
+        .list-section { margin-top: 210px; }
+
+        .app-footer { position: static; margin-top: 30px; margin-left: -20px; width: 100vw; }
+        .footer-logo { position: static; transform: none; display: block; margin: 0 auto 15px auto; }
+        .footer-content { flex-direction: column; text-align: center; gap: 10px; }
+        .footer-copyright, .footer-contact { text-align: center; padding: 0; }
+    }
+
+    /* Custom Scrollbar for Lyrics Pane */
+    .lyrics-pane::-webkit-scrollbar { width: 6px; }
+    .lyrics-pane::-webkit-scrollbar-track { background: transparent; }
+    .lyrics-pane::-webkit-scrollbar-thumb { background: #cccccc; border-radius: 10px; }
+    .lyrics-pane::-webkit-scrollbar-thumb:hover { background: #999999; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand-header">
+        <a href="https://221street.com/" class="home-link">&lt; Home</a>
+        <img src="logo.png" alt="221st Street Publishing" class="brand-logo">
+    </div>
+    
+    <div class="main-content">
+        <div class="list-section">
+            <div id="resultCount" class="result-count">Loading catalog...</div>
+            <div class="controls">
+                <input type="text" id="searchBar" placeholder="Search name or writer..." onkeyup="filterCatalog()">
+                <select id="genreFilter" onchange="filterCatalog()">
+                    <option value="All">All Genres</option>
+                    <option value="Bluegrass Gospel">Bluegrass Gospel</option>
+                    <option value="Contemporary Gospel">Contemporary Gospel</option>
+                    <option value="Country Gospel">Country Gospel</option>
+                    <option value="Southern Gospel">Southern Gospel</option>
+                </select>
+            </div>
+            <div id="tagContainer" class="tag-filters"> </div>
+            <ul class="song-list" id="songList"></ul>
+        </div>
+        
+        <div class="lyrics-section">
+            <div class="master-player">
+                <h3 id="now-playing-title">Select a track to listen</h3>
+                <p id="now-playing-writer">Writer Information</p>
+                <audio id="mainAudio" controls>
+                    <source id="audioSource" src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <div class="autoplay-toggle">
+                    <input type="checkbox" id="autoplayCheck">
+                    <label for="autoplayCheck">Auto-play next in list</label>
+                </div>
+            </div>
+
+            <h3>Lyrics</h3>
+            <div id="lyrics-pane" class="lyrics-pane">Select a song to view lyrics...</div>
+            
+            <p class="disclaimer">All compositions are the intellectual property of their creator(s) and are protected by international copyright law. No part of these composition(s) may be used in any form or for any purpose without first obtaining proper licensing and/or by getting expressed written permission from the copyright owner(s).</p>
+        </div>
+    </div>
+</div> 
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div class="footer-copyright">
+                &copy;2026 - 221st Street Music LLC.<br>
+                All rights reserved.
+            </div>
+            <a href="https://221street.com/" class="footer-logo-link">
+                <img src="logo.png" alt="221st Street Publishing" class="footer-logo">
+            </a>
+            <div class="footer-contact">
+                <strong>Contact us:</strong><br>
+                918.607.3046<br>
+                <a href="mailto:info@221street.com">info@221street.com</a>
+            </div>
+        </div>
+    </footer>
+<script>
+    let catalogData = [];
+    let currentPlaylist = []; 
+    let currentSongIndex = -1; 
+
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch('songs.json')
+            .then(res => res.json())
+            .then(data => {
+                catalogData = data;
+                currentPlaylist = data; 
+                displaySongs(catalogData);
+                renderTagFilters();
+            })
+            .catch(err => console.error("Error loading the catalog:", err));
+
+        const audio = document.getElementById('mainAudio');
+        audio.addEventListener('ended', () => {
+            const autoplayEnabled = document.getElementById('autoplayCheck').checked;
+            
+            if (autoplayEnabled && currentSongIndex !== -1 && currentSongIndex < currentPlaylist.length - 1) {
+                const nextSong = currentPlaylist[currentSongIndex + 1];
+                const writers = nextSong.writers.join(', ');
+                playTrack(nextSong.title, writers, nextSong.file, nextSong.lyrics || "Lyrics coming soon!");
+            }
+        });
+    });
+
+    function displaySongs(songs) {
+        const list = document.getElementById('songList');
+        const countDisplay = document.getElementById('resultCount');
+        list.innerHTML = '';
+        if (countDisplay) {
+            countDisplay.innerText = `Showing ${songs.length} track${songs.length === 1 ? '' : 's'}`;
+        }
+        songs.forEach((song, index) => {
+            const writers = song.writers.join(', ');
+            const li = document.createElement('li');
+            li.className = 'song-item';
+            
+            if (currentSongIndex === index) {
+                li.classList.add('active-playing');
+            }
+
+            li.onclick = () => playTrack(song.title, writers, song.file, song.lyrics || "Lyrics coming soon!");
+            li.innerHTML = `
+                <div class="song-info">
+                    <h3>${song.title}</h3>
+                    <p>Writers: ${writers} | Genre: ${song.genre}</p>
+                </div>
+                <div class="play-indicator">▶ PLAY</div>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function playTrack(title, writers, fileName, lyrics) {
+        const audio = document.getElementById('mainAudio');
+        const source = document.getElementById('audioSource');
+        const titleEl = document.getElementById('now-playing-title');
+        const writerEl = document.getElementById('now-playing-writer');
+        const lyricsEl = document.getElementById('lyrics-pane');
+
+        source.src = encodeURI("audio/" + fileName);
+        titleEl.innerText = title;
+        writerEl.innerText = "Writers: " + writers;
+        lyricsEl.innerText = lyrics; 
+        lyricsEl.scrollTop = 0; 
+
+        currentSongIndex = currentPlaylist.findIndex(s => s.file === fileName);
+        
+        displaySongs(currentPlaylist);
+
+        audio.load();
+        audio.play();
+    }
+
+    function renderTagFilters() {
+        const tagContainer = document.getElementById('tagContainer');
+        const allTags = new Set();
+        catalogData.forEach(song => {
+            if (song.tags) { song.tags.forEach(tag => allTags.add(tag)); }
+        });
+        tagContainer.innerHTML = `<button class="tag-btn active" onclick="filterByTag('All', this)">All Styles</button>`;
+        allTags.forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'tag-btn';
+            btn.innerText = tag;
+            btn.onclick = (e) => filterByTag(tag, e.target);
+            tagContainer.appendChild(btn);
+        });
+    }
+
+    function filterByTag(tag, element) {
+        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+        filterCatalog();
+    }
+
+    function filterCatalog() {
+        const searchText = document.getElementById('searchBar').value.toLowerCase();
+        const selectedGenre = document.getElementById('genreFilter').value;
+        const activeTagBtn = document.querySelector('.tag-btn.active');
+        const selectedTag = activeTagBtn ? activeTagBtn.innerText : 'All Styles';
+
+        const filtered = catalogData.filter(song => {
+            const matchesText = song.title.toLowerCase().includes(searchText) || 
+                                song.writers.some(w => w.toLowerCase().includes(searchText));
+            const matchesGenre = (selectedGenre === "All") ? true : (song.genre === selectedGenre);
+            const matchesTag = (selectedTag === 'All Styles' || selectedTag === 'All') ? true : (song.tags && song.tags.includes(selectedTag));
+            return matchesText && matchesGenre && matchesTag;
+        });
+        
+        currentPlaylist = filtered;
+        currentSongIndex = -1;
+        
+        displaySongs(currentPlaylist);
+    }
+
+    // IP PROTECTION: Disable Right-Click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+</body>
+</html>
