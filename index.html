@@ -8,12 +8,12 @@
     /* 1. App-Style Background */
     body { 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-        background-color: #030303; /* YT Music Dark */
+        background-color: #030303; 
         color: #ffffff; 
         margin: 0; 
         display: flex; 
-        height: 100vh; /* Locks the body to the screen height */
-        overflow: hidden; /* Prevents global scrolling */
+        height: 100vh; 
+        overflow: hidden; 
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
@@ -54,7 +54,7 @@
     }
     .sidebar-link:hover { color: #ffffff; }
 
-    /* 3. Controls & Inputs (Now in Sidebar) */
+    /* 3. Controls & Inputs */
     .controls { display: flex; flex-direction: column; gap: 10px; } 
     input[type="text"], select { 
         padding: 12px; font-size: 14px; border: 1px solid #333; border-radius: 8px; 
@@ -68,82 +68,47 @@
     .tag-btn { background: #222; color: #aaa; border: 1px solid #333; border-radius: 20px; padding: 6px 12px; font-size: 0.8em; cursor: pointer; transition: all 0.2s; }
     .tag-btn.active { background: #ffffff; color: #000000; border-color: #ffffff; font-weight: bold; }
 
-/* Toggle Switch Container */
-    .switch-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
+    /* Toggle Switch */
+    .switch-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .tag-title { font-size: 0.8em; color: #888; text-transform: uppercase; font-weight: bold; }
-    
-    .switch-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+    .switch-container { display: flex; align-items: center; gap: 8px; }
     .switch-label { font-size: 0.7em; color: #aaa; text-transform: uppercase; font-weight: bold; }
+    .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
+    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider { background-color: #415a77; }
+    input:checked + .slider:before { transform: translateX(16px); }
 
-    /* The physical switch */
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 36px;
-        height: 20px;
-    }
-
-    /* Hide default HTML checkbox */
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    /* The slider track */
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-color: #333;
-        transition: .4s;
-        border-radius: 20px;
-    }
-
-    /* The sliding circle */
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 14px;
-        width: 14px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
-
-    /* When toggled on (Azul Blue) */
-    input:checked + .slider {
-        background-color: #415a77; 
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(16px);
-    }
-
-        
-    /* 4. Main Scrollable View */
+    /* 4. Main View & Album Grid */
     .main-view { 
-        flex: 1; 
-        display: flex; 
-        gap: 30px; 
-        padding: 30px 40px 120px 40px; /* Bottom padding clears the player */
-        overflow-y: auto; 
+        flex: 1; display: flex; gap: 30px; 
+        padding: 30px 40px 120px 40px; overflow-y: auto; 
     }
     .list-section { flex: 1.5; } 
     .lyrics-section { flex: 1; position: sticky; top: 0; height: fit-content; }
 
     .result-count { font-size: 0.85em; color: #aaaaaa; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #272727; padding-bottom: 10px; }    
+
+    /* Album Square Styling */
+    .album-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+    .album-card {
+        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        border: 1px solid #272727; border-radius: 12px;
+        flex: 1; min-width: 200px; aspect-ratio: 1 / 1;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        cursor: pointer; transition: all 0.2s; text-align: center; padding: 20px;
+    }
+    .album-card:hover { transform: translateY(-5px); border-color: #415a77; background: #1a222c; }
+    .album-card h2 { margin: 0; font-size: 1.6em; color: #fff; }
+    .album-card p { margin: 10px 0 0 0; color: #888; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+    
+    .back-btn { 
+        background: #222; color: #fff; border: 1px solid #415a77; padding: 8px 16px; 
+        border-radius: 6px; cursor: pointer; font-size: 0.85em; margin-bottom: 15px; 
+        font-weight: bold; transition: 0.2s; display: none;
+    }
+    .back-btn:hover { background: #415a77; }
 
     /* 5. Song Cards */
     .song-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -228,8 +193,8 @@
     <a href="https://github.com/rayazulseven-max" class="sidebar-link" target="_blank">View GitHub Profile ↗</a>
     
     <div class="controls">
-        <input type="text" id="searchBar" placeholder="Search tracks or creators..." onkeyup="filterCatalog()">
-        <select id="genreFilter" onchange="filterCatalog()">
+        <input type="text" id="searchBar" placeholder="Search tracks or creators..." onkeyup="filterCatalog('user')">
+        <select id="genreFilter" onchange="filterCatalog('user')">
             <option value="All">All Genres</option>
             <option value="K-Pop Dance">K-Pop Dance</option>
             <option value="Retro Synth-Pop">Retro Synth-Pop</option>
@@ -256,8 +221,23 @@
 
 <div class="main-view">
     <div class="list-section">
-        <div id="resultCount" class="result-count">Loading catalog...</div>
-        <ul class="song-list" id="songList"></ul>
+        <div id="resultCount" class="result-count">SELECT AN ALBUM OR SEARCH</div>
+        
+        <div id="albumGrid" class="album-grid">
+            <div class="album-card" onclick="selectAlbum('Winter Box')">
+                <h2>Winter Box</h2>
+                <p>6 Tracks</p>
+            </div>
+            <div class="album-card" onclick="selectAlbum('Christmas Pulse (크리스마스 리듬)')">
+                <h2>Christmas Pulse <br><span style="font-size: 0.6em; color:#888;">(크리스마스 리듬)</span></h2>
+                <p>5 Tracks</p>
+            </div>
+        </div>
+
+        <div id="songListContainer" style="display: none;">
+            <button id="backToAlbumsBtn" class="back-btn" onclick="resetView()">&larr; Back to Albums</button>
+            <ul class="song-list" id="songList"></ul>
+        </div>
     </div>
     
     <div class="lyrics-section">
@@ -292,6 +272,7 @@
     let catalogData = [];
     let currentPlaylist = []; 
     let currentSongIndex = -1; 
+    let currentAlbum = 'All'; // Track which album is selected
 
     document.addEventListener("DOMContentLoaded", () => {
         fetch('songs.json')
@@ -299,7 +280,7 @@
             .then(data => {
                 catalogData = data;
                 currentPlaylist = data; 
-                displaySongs(catalogData);
+                filterCatalog(); // Initialize logic
                 renderTagFilters();
             })
             .catch(err => console.error("Error loading the catalog:", err));
@@ -320,9 +301,13 @@
         const list = document.getElementById('songList');
         const countDisplay = document.getElementById('resultCount');
         list.innerHTML = '';
-        if (countDisplay) {
-            countDisplay.innerText = `${songs.length} TRACK${songs.length === 1 ? '' : 'S'} AVAILABLE`;
+        
+        if (countDisplay && currentAlbum !== 'All') {
+            countDisplay.innerText = `${currentAlbum.toUpperCase()} - ${songs.length} TRACK${songs.length === 1 ? '' : 'S'}`;
+        } else if (countDisplay) {
+            countDisplay.innerText = `${songs.length} TRACK${songs.length === 1 ? '' : 'S'} FOUND`;
         }
+
         songs.forEach((song, index) => {
             const writers = song.writers.join(', ');
             const li = document.createElement('li');
@@ -385,78 +370,113 @@
 
     function toggleMultiSelect() {
         isMultiSelect = document.getElementById('multiSelectToggle').checked;
-        
-        // If the user turns off multi-select, gracefully reset the UI back to "All"
         if (!isMultiSelect) {
             document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
-            const allBtn = document.querySelector('.tag-btn'); // The 'All' button is always first
+            const allBtn = document.querySelector('.tag-btn'); 
             if(allBtn) allBtn.classList.add('active');
-            filterCatalog();
+            filterCatalog('user');
         }
     }
 
     function filterByTag(tag, element) {
         const isAllTag = (tag === 'All');
-        const allBtn = document.querySelector('.tag-btn'); // Targets the 'All' button
+        const allBtn = document.querySelector('.tag-btn'); 
 
         if (!isMultiSelect) {
-            // STANDARD MODE: Only one tag can be active
             document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
         } else {
-            // MULTI-SELECT MODE
             if (isAllTag) {
-                // Clicking 'All' clears everything else
                 document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
                 element.classList.add('active');
             } else {
-                // Deselect the 'All' button if a specific tag is clicked
                 if (allBtn) allBtn.classList.remove('active');
-                
-                // Toggle the clicked tag on or off
                 element.classList.toggle('active');
-                
-                // Fallback: If they unclick every single tag, automatically reselect 'All'
                 if (document.querySelectorAll('.tag-btn.active').length === 0) {
                     if (allBtn) allBtn.classList.add('active');
                 }
             }
         }
-        filterCatalog();
+        filterCatalog('user');
     }
 
-    function filterCatalog() {
+    // New function to jump into an Album
+    function selectAlbum(albumName) {
+        currentAlbum = albumName;
+        document.getElementById('searchBar').value = '';
+        document.getElementById('genreFilter').value = 'All';
+        
+        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+        const allBtn = document.querySelector('.tag-btn'); 
+        if(allBtn) allBtn.classList.add('active');
+        
+        filterCatalog('album');
+    }
+
+    // New function to reset everything back to the Home Grid
+    function resetView() {
+        currentAlbum = 'All';
+        document.getElementById('searchBar').value = '';
+        document.getElementById('genreFilter').value = 'All';
+        
+        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+        const allBtn = document.querySelector('.tag-btn'); 
+        if(allBtn) allBtn.classList.add('active');
+        
+        filterCatalog('reset');
+    }
+
+    function filterCatalog(source = 'default') {
+        // If the user uses search or tags, we exit the Album View and search globally
+        if (source === 'user') {
+            currentAlbum = 'All';
+        }
+
         const searchText = document.getElementById('searchBar').value.toLowerCase();
         const selectedGenre = document.getElementById('genreFilter').value;
-        
-        // Gather all currently active tags into an array
         const activeTagElements = document.querySelectorAll('.tag-btn.active');
         const activeTags = Array.from(activeTagElements).map(el => el.innerText);
 
+        // Determine if we are at the "Home" state
+        const isDefaultState = (searchText === '' && selectedGenre === 'All' && activeTags.includes('All') && currentAlbum === 'All');
+
+        if (isDefaultState) {
+            document.getElementById('albumGrid').style.display = 'flex';
+            document.getElementById('songListContainer').style.display = 'none';
+            document.getElementById('resultCount').innerText = "SELECT AN ALBUM OR SEARCH";
+            return; // Stop processing since we don't need a list yet
+        }
+
+        // Otherwise, hide the grid and show the list
+        document.getElementById('albumGrid').style.display = 'none';
+        document.getElementById('songListContainer').style.display = 'block';
+
+        const backBtn = document.getElementById('backToAlbumsBtn');
+        if (currentAlbum !== 'All') {
+            backBtn.style.display = 'inline-block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+
         const filtered = catalogData.filter(song => {
-            // 1. Check Search Bar
             const matchesText = song.title.toLowerCase().includes(searchText) || 
                                 song.writers.some(w => w.toLowerCase().includes(searchText));
             
-            // 2. Check Primary Genre Dropdown
             const matchesGenre = (selectedGenre === "All") ? true : (song.genre === selectedGenre);
             
-            // 3. Check Tags (The Inclusive "OR" Logic)
             let matchesTag = false;
             if (activeTags.includes('All')) {
                 matchesTag = true;
             } else {
-                // CHANGED FROM .every() TO .some()
-                // Now, if a song has ANY of the selected tags, it gets included!
                 matchesTag = activeTags.some(t => song.tags && song.tags.includes(t));
             }
+            
+            const matchesAlbum = (currentAlbum === 'All') ? true : (song.album === currentAlbum);
 
-            return matchesText && matchesGenre && matchesTag;
+            return matchesText && matchesGenre && matchesTag && matchesAlbum;
         });
         
         currentPlaylist = filtered;
-        currentSongIndex = -1;
-        
         displaySongs(currentPlaylist);
     }
      
