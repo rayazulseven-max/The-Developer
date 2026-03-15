@@ -5,234 +5,214 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ray Azul Perez | AI Developer Portfolio</title>
     <style>
-    /* 1. Dark Mode Background */
+    /* 1. App-Style Background */
     body { 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-        background-color: #121212; 
+        background-color: #030303; /* YT Music Dark */
         color: #ffffff; 
         margin: 0; 
-        padding: 0 20px 100px 20px; 
         display: flex; 
-        flex-direction: column; 
-        align-items: center;
+        height: 100vh; /* Locks the body to the screen height */
+        overflow: hidden; /* Prevents global scrolling */
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
     }
 
-    /* 2. Dark Header */
-    .brand-header {
-        position: fixed; top: 0; left: 0; width: 100%;
-        background-color: rgba(18, 18, 18, 0.95);
-        z-index: 1200; padding: 15px 0; text-align: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    /* 2. Left Sidebar Navigation */
+    .sidebar {
+        width: 260px;
+        background-color: #0f0f0f;
+        border-right: 1px solid #272727;
+        padding: 25px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        overflow-y: auto;
+        z-index: 100;
     }
-    
+
     .brand-logo-text {
         color: #ffffff;
-        margin: 0;
-        font-size: 24px;
+        margin: 0 0 5px 0;
+        font-size: 20px;
         font-weight: 800;
-        letter-spacing: 3px;
+        letter-spacing: 2px;
         text-transform: uppercase;
     }
-
-    /* Header Home Link Styling */
-    .home-link {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #415a77;
+    
+    .developer-tag { font-size: 0.8em; color: #aaaaaa; margin: 0; letter-spacing: 1px; }
+    
+    .sidebar-link {
+        color: #aaaaaa;
         text-decoration: none;
-        font-size: 16px;
         font-weight: bold;
-        transition: opacity 0.2s;
+        font-size: 0.9em;
+        transition: color 0.2s;
+        margin-top: -10px;
+        display: inline-block;
     }
-    .home-link:hover { opacity: 0.7; color: #ffffff; }
+    .sidebar-link:hover { color: #ffffff; }
 
-    .footer-logo-link { display: contents; text-decoration: none; }
-        
-    /* 3. Layout Spacing */
-    .container { max-width: 1000px; width: 100%; padding-top: 150px; }
-    h1 { text-align: center; margin-bottom: 30px; color: #ffffff; }
-    .main-content { display: flex; gap: 30px; width: 100%; align-items: flex-start; }
-    .list-section { flex: 1.5; } 
-    .lyrics-section { flex: 1; position: sticky; top: 120px; }
-
-    /* 4. Controls & Inputs */
-    .controls { display: flex; gap: 10px; margin-bottom: 15px; } 
+    /* 3. Controls & Inputs (Now in Sidebar) */
+    .controls { display: flex; flex-direction: column; gap: 10px; } 
     input[type="text"], select { 
-        padding: 15px; font-size: 16px; border: 1px solid #ddd; border-radius: 8px; 
-        background: white; color: #333; outline: none; 
+        padding: 12px; font-size: 14px; border: 1px solid #333; border-radius: 8px; 
+        background: #222; color: #fff; outline: none; width: 100%; box-sizing: border-box;
     }
-    input[type="text"] { flex-grow: 1; user-select: text; -webkit-user-select: text; }
+    input[type="text"] { user-select: text; -webkit-user-select: text; }
+    input[type="text"]::placeholder { color: #888; }
     select { cursor: pointer; }
 
-    .result-count { font-size: 0.85em; color: #aaaaaa; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }    
+    .tag-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag-btn { background: #222; color: #aaa; border: 1px solid #333; border-radius: 20px; padding: 6px 12px; font-size: 0.8em; cursor: pointer; transition: all 0.2s; }
+    .tag-btn.active { background: #ffffff; color: #000000; border-color: #ffffff; font-weight: bold; }
+
+    /* 4. Main Scrollable View */
+    .main-view { 
+        flex: 1; 
+        display: flex; 
+        gap: 30px; 
+        padding: 30px 40px 120px 40px; /* Bottom padding clears the player */
+        overflow-y: auto; 
+    }
+    .list-section { flex: 1.5; } 
+    .lyrics-section { flex: 1; position: sticky; top: 0; height: fit-content; }
+
+    .result-count { font-size: 0.85em; color: #aaaaaa; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #272727; padding-bottom: 10px; }    
 
     /* 5. Song Cards */
-    .song-list { list-style: none; padding: 0; margin: 0; }
+    .song-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
     .song-item { 
-        background: white; color: #333; padding: 20px; margin-bottom: 12px; border-radius: 8px; 
+        background: transparent; color: #fff; padding: 15px 20px; border-radius: 8px; 
         display: flex; justify-content: space-between; align-items: center; 
-        cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; border-left: 5px solid transparent; 
+        cursor: pointer; transition: background 0.2s; border-bottom: 1px solid #1a1a1a;
         -webkit-tap-highlight-color: transparent;
     }
-    .song-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left-color: #415a77; }
-    
-    /* The Custom Tap Flash */
-    .song-item:active { background-color: #e6f2ff; transform: scale(0.98); }
-    .song-item.active-playing { border-left: 5px solid #415a77; background: #f0f8ff; }
+    .song-item:hover { background: #222; }
+    .song-item:active { transform: scale(0.99); background: #333; }
+    .song-item.active-playing { background: #2a2a2a; border-left: 4px solid #ffffff; }
     
     .song-info { flex: 1; padding-right: 20px; }
-    .song-info h3 { margin: 0; font-size: 1.1em; color: #333; }
-    .song-info p { margin: 5px 0 0 0; font-size: 0.9em; color: #666; }
+    .song-info h3 { margin: 0; font-size: 1.05em; color: #fff; font-weight: 600; }
+    .song-info p { margin: 4px 0 0 0; font-size: 0.85em; color: #aaa; }
     
-    .play-indicator { font-weight: bold; color: #415a77; flex-shrink: 0; white-space: nowrap; text-align: right; }
+    .play-indicator { font-size: 1.2em; color: #fff; flex-shrink: 0; opacity: 0.5; }
+    .song-item:hover .play-indicator, .song-item.active-playing .play-indicator { opacity: 1; }
 
-    /* 6. Player & Lyrics Pane */
-    .master-player { 
-        background: #1a1a1a; color: white; padding: 20px 25px; text-align: center; 
-        box-shadow: 0 4px 12px rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 20px;
-    }
-    #now-playing-title { margin: 0 0 5px 0; font-size: 1.2em; }
-    #now-playing-writer { margin: 0 0 15px 0; font-size: 0.9em; color: #aaa; }
-    audio { width: 100%; max-width: 700px; outline: none; }
-
-    /* V2.0 Autoplay Toggle Styling */
-    .autoplay-toggle { 
-        margin-top: 15px; font-size: 0.95em; color: #ccc; 
-        display: flex; align-items: center; justify-content: center; gap: 8px; 
-    }
-    .autoplay-toggle input[type="checkbox"] { cursor: pointer; accent-color: #415a77; width: 16px; height: 16px; margin: 0; }
-    .autoplay-toggle label { cursor: pointer; user-select: none; }
-
+    /* 6. Lyrics Pane */
     .lyrics-pane {
-        background: white; color: #333; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        white-space: pre-wrap; max-height: 500px; overflow-y: auto; overflow-x: hidden; font-size: 1em; line-height: 1.6;
+        background: #0f0f0f; color: #ddd; padding: 25px; border-radius: 12px; border: 1px solid #272727;
+        white-space: pre-wrap; max-height: 60vh; overflow-y: auto; overflow-x: hidden; font-size: 0.95em; line-height: 1.8;
         position: relative;
     }
     .lyrics-pane::before {
-        content: "V.I. PEREZ - PORTFOLIO DEMO";
+        content: "V.I. PEREZ - DEMO";
         position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
-        font-size: 2rem; font-weight: bold; color: rgba(0, 0, 0, 0.04);
+        font-size: 2.5rem; font-weight: bold; color: rgba(255, 255, 255, 0.03);
         pointer-events: none; white-space: nowrap; z-index: 1; letter-spacing: 4px;
     }
+    .disclaimer { font-size: 0.7em; color: #666; margin-top: 15px; text-align: justify; line-height: 1.4; }
 
-    /* 7. Tags & Disclaimer */
-    .tag-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; justify-content: flex-start; }
-    .tag-btn { background: #fff; color: #333; border: 1px solid #ddd; border-radius: 20px; padding: 8px 16px; font-size: 0.9em; cursor: pointer; transition: all 0.2s; }
-    .tag-btn.active { background: #415a77; color: white; border-color: #415a77; }
-    .disclaimer { font-size: 0.75em; color: #aaaaaa; margin-top: 15px; text-align: justify; line-height: 1.4; }
-
-    /* 8. Custom Footer - Azul Blue Gradient */
-    .app-footer {
-        position: fixed; bottom: 0; left: 0; width: 100%; 
-        background: linear-gradient(to bottom, #0d1b2a, #1b263b); 
-        color: white; padding: 15px 20px calc(15px + env(safe-area-inset-bottom)); 
-        border-top: 3px solid #415a77; 
-        box-sizing: border-box; font-size: 0.85em;
-        z-index: 1300; 
+    /* 7. App Bottom Player Bar */
+    .bottom-player {
+        position: fixed; bottom: 0; left: 0; width: 100%; height: 90px;
+        background-color: #0f0f0f; border-top: 1px solid #272727;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 30px; box-sizing: border-box; z-index: 1300;
     }
-    .footer-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; }
-    .footer-copyright { flex: 1; text-align: left; padding-right: 20px; } 
-    .footer-center { flex: 1; text-align: center; font-weight: bold; letter-spacing: 2px; color: #e0e1dd; }
-    .footer-contact { flex: 1; text-align: right; line-height: 1.5; padding-left: 20px; }
-    .footer-contact a { color: #778da9; text-decoration: none; font-weight: bold; }
+    
+    .player-info { width: 300px; display: flex; flex-direction: column; justify-content: center; }
+    #now-playing-title { margin: 0 0 4px 0; font-size: 1em; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #now-playing-writer { margin: 0; font-size: 0.8em; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .player-controls { flex: 1; display: flex; justify-content: center; align-items: center; }
+    audio { width: 100%; max-width: 600px; outline: none; height: 40px; }
 
-    /* 9. Mobile Adjustments */
-    @media (max-width: 800px) {
-        .controls { flex-direction: column; }
-        .container { width: 100%; padding-top: 180px; box-sizing: border-box; } 
-        .main-content { flex-direction: column; }
-        .lyrics-section { width: 100%; position: static; margin-top: 20px; }
-        .brand-header { display: none; } 
+    .player-options { width: 300px; display: flex; justify-content: flex-end; align-items: center; }
+    .autoplay-toggle { font-size: 0.85em; color: #aaa; display: flex; align-items: center; gap: 8px; }
+    .autoplay-toggle input[type="checkbox"] { cursor: pointer; accent-color: #fff; width: 14px; height: 14px; margin: 0; }
+    .autoplay-toggle label { cursor: pointer; }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    /* 8. Mobile Adjustments */
+    @media (max-width: 900px) {
+        body { flex-direction: column; overflow-y: auto; height: auto; }
+        .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #272727; height: auto; padding: 20px; box-sizing: border-box; overflow: visible; }
+        .main-view { flex-direction: column; padding: 20px 20px 140px 20px; overflow-y: visible; }
+        .lyrics-section { position: static; margin-top: 20px; }
         .lyrics-pane { max-height: none; }
-        
-        .master-player {
-            position: fixed; top: 0; left: 0; width: 100%; z-index: 1100; border-radius: 0; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5); height: auto; max-height: 200px; padding: 12px 20px; overflow: hidden; 
-            box-sizing: border-box; 
-        }
-        #now-playing-writer { white-space: normal; display: block; width: 100%; max-height: 50px; overflow-y: auto; margin-top: 5px; font-size: 0.8em; color: #aaa; padding-right: 5px; }
-        .autoplay-toggle { margin-top: 10px; }
-        .list-section { margin-top: 210px; }
-
-        .app-footer { position: static; margin-top: 30px; margin-left: -20px; width: 100vw; }
-        .footer-content { flex-direction: column; text-align: center; gap: 10px; }
-        .footer-copyright, .footer-contact { text-align: center; padding: 0; }
-        .footer-center { margin: 10px 0; }
+        .bottom-player { flex-direction: column; height: auto; padding: 15px 20px calc(15px + env(safe-area-inset-bottom)); gap: 10px; }
+        .player-info, .player-options { width: 100%; text-align: center; justify-content: center; }
+        .player-controls { width: 100%; }
     }
-
-    /* Custom Scrollbar for Lyrics Pane */
-    .lyrics-pane::-webkit-scrollbar { width: 6px; }
-    .lyrics-pane::-webkit-scrollbar-track { background: transparent; }
-    .lyrics-pane::-webkit-scrollbar-thumb { background: #cccccc; border-radius: 10px; }
-    .lyrics-pane::-webkit-scrollbar-thumb:hover { background: #999999; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="brand-header">
-        <a href="https://github.com/rayazulseven-max" class="home-link" target="_blank">&lt;~ GitHub</a>
+<div class="sidebar">
+    <div>
         <h2 class="brand-logo-text">RAY AZUL PEREZ</h2>
+        <p class="developer-tag">AI Developer Portfolio</p>
     </div>
     
-    <div class="main-content">
-        <div class="list-section">
-            <div id="resultCount" class="result-count">Loading catalog...</div>
-            <div class="controls">
-                <input type="text" id="searchBar" placeholder="Search name or writer..." onkeyup="filterCatalog()">
-                <select id="genreFilter" onchange="filterCatalog()">
-                    <option value="All">All Genres</option>
-                    <option value="Electronic">Electronic</option>
-                    <option value="Cinematic">Cinematic</option>
-                    <option value="Acoustic">Acoustic</option>
-                </select>
-            </div>
-            <div id="tagContainer" class="tag-filters"> </div>
-            <ul class="song-list" id="songList"></ul>
-        </div>
-        
-        <div class="lyrics-section">
-            <div class="master-player">
-                <h3 id="now-playing-title">Select a track to listen</h3>
-                <p id="now-playing-writer">Creator Information</p>
-                <audio id="mainAudio" controls>
-                    <source id="audioSource" src="" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-                <div class="autoplay-toggle">
-                    <input type="checkbox" id="autoplayCheck">
-                    <label for="autoplayCheck">Auto-play next in list</label>
-                </div>
-            </div>
+    <a href="https://github.com/rayazulseven-max" class="sidebar-link" target="_blank">View GitHub Profile ↗</a>
+    
+    <div class="controls">
+        <input type="text" id="searchBar" placeholder="Search tracks or creators..." onkeyup="filterCatalog()">
+        <select id="genreFilter" onchange="filterCatalog()">
+            <option value="All">All Genres</option>
+            <option value="Electronic">Electronic</option>
+            <option value="Cinematic">Cinematic</option>
+            <option value="Acoustic">Acoustic</option>
+        </select>
+    </div>
+    
+    <div>
+        <div style="font-size: 0.8em; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: bold;">Filter by Tag</div>
+        <div id="tagContainer" class="tag-filters"> </div>
+    </div>
+</div>
 
-            <h3>Details / Lyrics</h3>
-            <div id="lyrics-pane" class="lyrics-pane">Select a track to view details...</div>
-            
-            <p class="disclaimer"><strong>Technical Demonstration:</strong> This dynamic interface was developed by Ray Azul Perez to showcase interactive UI/UX design and data parsing capabilities. The audio tracks featured are generated via AI and are attributed to V.I. Perez. This catalog is for portfolio and demonstration purposes only.</p>
+<div class="main-view">
+    <div class="list-section">
+        <div id="resultCount" class="result-count">Loading catalog...</div>
+        <ul class="song-list" id="songList"></ul>
+    </div>
+    
+    <div class="lyrics-section">
+        <div style="font-size: 0.85em; color: #aaaaaa; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #272727; padding-bottom: 10px;">Details & Lyrics</div>
+        <div id="lyrics-pane" class="lyrics-pane">Select a track to view details...</div>
+        <p class="disclaimer"><strong>Technical Demonstration:</strong> This interface was developed by Ray Azul Perez to showcase interactive UI design and data parsing. Tracks featured are AI-generated and attributed to V.I. Perez.</p>
+    </div>
+</div>
+
+<div class="bottom-player">
+    <div class="player-info">
+        <h3 id="now-playing-title">Ready to Play</h3>
+        <p id="now-playing-writer">Select a track from the catalog</p>
+    </div>
+    
+    <div class="player-controls">
+        <audio id="mainAudio" controls>
+            <source id="audioSource" src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    
+    <div class="player-options">
+        <div class="autoplay-toggle">
+            <input type="checkbox" id="autoplayCheck">
+            <label for="autoplayCheck">Autoplay next</label>
         </div>
     </div>
-</div> 
-    <footer class="app-footer">
-        <div class="footer-content">
-            <div class="footer-copyright">
-                &copy;2026 - V.I. Perez<br>
-                All rights reserved.
-            </div>
-            <div class="footer-center">
-                AI DEVELOPMENT PORTFOLIO
-            </div>
-            <div class="footer-contact">
-                <strong>Ray Azul Perez</strong><br>
-                Developer / Engineer<br>
-                <a href="https://github.com/rayazulseven-max" target="_blank">View GitHub Profile</a>
-            </div>
-        </div>
-    </footer>
+</div>
+
 <script>
     let catalogData = [];
     let currentPlaylist = []; 
@@ -266,7 +246,7 @@
         const countDisplay = document.getElementById('resultCount');
         list.innerHTML = '';
         if (countDisplay) {
-            countDisplay.innerText = `Showing ${songs.length} track${songs.length === 1 ? '' : 's'}`;
+            countDisplay.innerText = `${songs.length} TRACK${songs.length === 1 ? '' : 'S'} AVAILABLE`;
         }
         songs.forEach((song, index) => {
             const writers = song.writers.join(', ');
@@ -281,9 +261,9 @@
             li.innerHTML = `
                 <div class="song-info">
                     <h3>${song.title}</h3>
-                    <p>Creator: ${writers} | Genre: ${song.genre}</p>
+                    <p>${writers} • ${song.genre}</p>
                 </div>
-                <div class="play-indicator">▶ PLAY</div>
+                <div class="play-indicator">▶</div>
             `;
             list.appendChild(li);
         });
@@ -298,7 +278,7 @@
 
         source.src = encodeURI("audio/" + fileName);
         titleEl.innerText = title;
-        writerEl.innerText = "Creator: " + writers;
+        writerEl.innerText = writers;
         lyricsEl.innerText = lyrics; 
         lyricsEl.scrollTop = 0; 
 
@@ -316,7 +296,7 @@
         catalogData.forEach(song => {
             if (song.tags) { song.tags.forEach(tag => allTags.add(tag)); }
         });
-        tagContainer.innerHTML = `<button class="tag-btn active" onclick="filterByTag('All', this)">All Styles</button>`;
+        tagContainer.innerHTML = `<button class="tag-btn active" onclick="filterByTag('All', this)">All</button>`;
         allTags.forEach(tag => {
             const btn = document.createElement('button');
             btn.className = 'tag-btn';
@@ -336,13 +316,13 @@
         const searchText = document.getElementById('searchBar').value.toLowerCase();
         const selectedGenre = document.getElementById('genreFilter').value;
         const activeTagBtn = document.querySelector('.tag-btn.active');
-        const selectedTag = activeTagBtn ? activeTagBtn.innerText : 'All Styles';
+        const selectedTag = activeTagBtn ? activeTagBtn.innerText : 'All';
 
         const filtered = catalogData.filter(song => {
             const matchesText = song.title.toLowerCase().includes(searchText) || 
                                 song.writers.some(w => w.toLowerCase().includes(searchText));
             const matchesGenre = (selectedGenre === "All") ? true : (song.genre === selectedGenre);
-            const matchesTag = (selectedTag === 'All Styles' || selectedTag === 'All') ? true : (song.tags && song.tags.includes(selectedTag));
+            const matchesTag = (selectedTag === 'All' || selectedTag === 'All Styles') ? true : (song.tags && song.tags.includes(selectedTag));
             return matchesText && matchesGenre && matchesTag;
         });
         
