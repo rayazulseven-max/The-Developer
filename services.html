@@ -18,46 +18,40 @@
         .bot { background: #222; align-self: flex-start; border-bottom-left-radius: 2px; }
         .user { background: #415a77; align-self: flex-end; border-bottom-right-radius: 2px; }
         .chat-input-area { padding: 20px; border-top: 1px solid #272727; display: flex; gap: 10px; }
-        input { flex: 1; background: #222; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; }
+        input, select { flex: 1; background: #222; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; }
         button { background: #415a77; border: none; color: white; padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .back-link { color: #888; text-decoration: none; font-size: 0.8em; font-weight: bold; }
         .back-link:hover { color: white; }
         
-        /* 4. Mobile Adjustments */
+        /* Mobile Adjustments */
         @media (max-width: 900px) {
-            body { 
-                flex-direction: column; 
-                overflow-y: auto; 
-                height: auto; 
-            }
-            .filter-sidebar { 
-                width: 100%; 
-                border-right: none; 
-                border-bottom: 1px solid #272727; 
-                padding: 20px; 
-                box-sizing: border-box; 
-                height: auto;
-            }
-            .catalog-container { 
-                padding: 20px; 
-                overflow: visible; 
-            }
-            .ai-sidebar { 
-                width: 100%; 
-                border-left: none; 
-                border-top: 1px solid #272727; 
-                height: 600px; 
-                box-sizing: border-box; 
-            }
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            .filter-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #272727; padding: 20px; box-sizing: border-box; height: auto; }
+            .catalog-container { padding: 20px; overflow: visible; }
+            .ai-sidebar { width: 100%; border-left: none; border-top: 1px solid #272727; height: 600px; box-sizing: border-box; }
         }
     </style>
 </head>
 <body>
 
     <aside class="filter-sidebar">
-        <a href="index.html" class="back-link">← BACK TO MUSIC</a>
-        <h2 style="font-size: 1.2em; letter-spacing: 2px;">SERVICES</h2>
-        <input type="text" placeholder="Filter services..." id="serviceSearch">
+        <a href="music.html" class="back-link">← BACK TO MUSIC</a>
+        <h2 style="font-size: 1.2em; letter-spacing: 2px; margin: 0;">SERVICES</h2>
+        
+        <input type="text" placeholder="Search keywords..." id="serviceSearch" onkeyup="filterServices()">
+        
+        <div>
+            <p style="font-size: 0.8em; color: #888; margin-bottom: 5px;">CATEGORY</p>
+            <select id="categoryFilter" onchange="filterServices()">
+                <option value="All">All Categories</option>
+                <option value="Data Analytics">Data Analytics</option>
+                <option value="Data Collection">Data Collection</option>
+                <option value="Data Engineering">Data Engineering</option>
+                <option value="AI Development">AI Development</option>
+                <option value="Automation">Automation</option>
+                <option value="Web Design">Web Design</option>
+            </select>
+        </div>
     </aside>
 
     <main class="catalog-container" id="serviceGrid"></main>
@@ -65,10 +59,10 @@
     <aside class="ai-sidebar">
         <div class="chat-header">AZUL-BOT // SALES AGENT</div>
         <div class="chat-window" id="chatWindow">
-            <div class="msg bot">Hello! I can provide quotes for Ray's services or help you find a specific tool. What are you looking for?</div>
+            <div class="msg bot">Hello! I can provide quotes for Ray's data and development services. What are you looking for?</div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="Ask about a price...">
+            <input type="text" id="userInput" placeholder="Ask about a service...">
             <button onclick="sendMessage()">SEND</button>
         </div>
     </aside>
@@ -80,7 +74,7 @@
         .then(res => res.json())
         .then(data => {
             services = data;
-            renderServices(data);
+            renderServices(data); // Initial load of all services
         });
 
     function renderServices(data) {
@@ -91,8 +85,31 @@
                 <h3 style="margin: 5px 0;">${s.name}</h3>
                 <div class="product-price">$${s.price}</div>
                 <p style="font-size: 0.8em; color: #aaa;">${s.description}</p>
+                <div style="margin-top: 10px; font-size: 0.75em; color: #666;">
+                    ${s.tags.map(t => `<span style="background: #222; padding: 2px 6px; border-radius: 4px; margin-right: 5px; display: inline-block;">${t}</span>`).join('')}
+                </div>
             </div>
         `).join('');
+    }
+
+    // New Filtering Logic
+    function filterServices() {
+        const query = document.getElementById('serviceSearch').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+
+        const filtered = services.filter(s => {
+            // Check if the search text matches the name, description, or tags
+            const matchesText = s.name.toLowerCase().includes(query) || 
+                                s.description.toLowerCase().includes(query) ||
+                                s.tags.some(t => t.toLowerCase().includes(query));
+            
+            // Check if the category dropdown matches
+            const matchesCategory = (category === "All") ? true : (s.category === category);
+
+            return matchesText && matchesCategory;
+        });
+
+        renderServices(filtered);
     }
 
     function sendMessage() {
@@ -111,7 +128,7 @@
             if (match) {
                 window.innerHTML += `<div class="msg bot">I found a match! The <strong>${match.name}</strong> package is $${match.price}. It includes ${match.description}</div>`;
             } else {
-                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" style="color: #415a77;">Contact Us</a></strong> page to get a custom quote from Ray!</div>`;
+                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" style="color: #415a77;">Contact Us</a></strong> page to get a custom quote!</div>`;
             }
             window.scrollTop = window.scrollHeight;
         }, 600);
@@ -121,4 +138,3 @@
 </script>
 </body>
 </html>
-
