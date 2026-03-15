@@ -68,6 +68,70 @@
     .tag-btn { background: #222; color: #aaa; border: 1px solid #333; border-radius: 20px; padding: 6px 12px; font-size: 0.8em; cursor: pointer; transition: all 0.2s; }
     .tag-btn.active { background: #ffffff; color: #000000; border-color: #ffffff; font-weight: bold; }
 
+/* Toggle Switch Container */
+    .switch-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .tag-title { font-size: 0.8em; color: #888; text-transform: uppercase; font-weight: bold; }
+    
+    .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .switch-label { font-size: 0.7em; color: #aaa; text-transform: uppercase; font-weight: bold; }
+
+    /* The physical switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider track */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #333;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+    /* The sliding circle */
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    /* When toggled on (Azul Blue) */
+    input:checked + .slider {
+        background-color: #415a77; 
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(16px);
+    }
+
+        
     /* 4. Main Scrollable View */
     .main-view { 
         flex: 1; 
@@ -176,7 +240,16 @@
     </div>
     
     <div>
-        <div style="font-size: 0.8em; color: #888; margin-bottom: 10px; text-transform: uppercase; font-weight: bold;">Filter by Tag</div>
+        <div class="switch-header">
+            <div class="tag-title">Filter by Tag</div>
+            <div class="switch-container">
+                <span class="switch-label">Multi</span>
+                <label class="switch">
+                    <input type="checkbox" id="multiSelectToggle" onchange="toggleMultiSelect()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
         <div id="tagContainer" class="tag-filters"> </div>
     </div>
 </div>
@@ -308,23 +381,75 @@
         });
     }
 
+    let isMultiSelect = false;
+
+    function toggleMultiSelect() {
+        isMultiSelect = document.getElementById('multiSelectToggle').checked;
+        
+        // If the user turns off multi-select, gracefully reset the UI back to "All"
+        if (!isMultiSelect) {
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            const allBtn = document.querySelector('.tag-btn'); // The 'All' button is always first
+            if(allBtn) allBtn.classList.add('active');
+            filterCatalog();
+        }
+    }
+
     function filterByTag(tag, element) {
-        document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
-        element.classList.add('active');
+        const isAllTag = (tag === 'All');
+        const allBtn = document.querySelector('.tag-btn'); // Targets the 'All' button
+
+        if (!isMultiSelect) {
+            // STANDARD MODE: Only one tag can be active
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        } else {
+            // MULTI-SELECT MODE
+            if (isAllTag) {
+                // Clicking 'All' clears everything else
+                document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+                element.classList.add('active');
+            } else {
+                // Deselect the 'All' button if a specific tag is clicked
+                if (allBtn) allBtn.classList.remove('active');
+                
+                // Toggle the clicked tag on or off
+                element.classList.toggle('active');
+                
+                // Fallback: If they unclick every single tag, automatically reselect 'All'
+                if (document.querySelectorAll('.tag-btn.active').length === 0) {
+                    if (allBtn) allBtn.classList.add('active');
+                }
+            }
+        }
         filterCatalog();
     }
 
     function filterCatalog() {
         const searchText = document.getElementById('searchBar').value.toLowerCase();
         const selectedGenre = document.getElementById('genreFilter').value;
-        const activeTagBtn = document.querySelector('.tag-btn.active');
-        const selectedTag = activeTagBtn ? activeTagBtn.innerText : 'All';
+        
+        // Gather all currently active tags into an array
+        const activeTagElements = document.querySelectorAll('.tag-btn.active');
+        const activeTags = Array.from(activeTagElements).map(el => el.innerText);
 
         const filtered = catalogData.filter(song => {
+            // 1. Check Search Bar
             const matchesText = song.title.toLowerCase().includes(searchText) || 
                                 song.writers.some(w => w.toLowerCase().includes(searchText));
+            
+            // 2. Check Primary Genre Dropdown
             const matchesGenre = (selectedGenre === "All") ? true : (song.genre === selectedGenre);
-            const matchesTag = (selectedTag === 'All' || selectedTag === 'All Styles') ? true : (song.tags && song.tags.includes(selectedTag));
+            
+            // 3. Check Tags (The new Multi-Select Logic)
+            let matchesTag = false;
+            if (activeTags.includes('All')) {
+                matchesTag = true;
+            } else {
+                // The .every() method ensures the song contains ALL of the selected tags (AND logic)
+                matchesTag = activeTags.every(t => song.tags && song.tags.includes(t));
+            }
+
             return matchesText && matchesGenre && matchesTag;
         });
         
@@ -333,7 +458,7 @@
         
         displaySongs(currentPlaylist);
     }
-
+     
     // IP PROTECTION: Disable Right-Click
     document.addEventListener('contextmenu', event => event.preventDefault());
 </script>
