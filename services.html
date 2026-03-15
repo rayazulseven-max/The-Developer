@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray Azul Perez | Services Demo</title>
+    <style>
+        body { font-family: -apple-system, system-ui, sans-serif; background-color: #030303; color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .filter-sidebar { width: 250px; background: #0f0f0f; border-right: 1px solid #272727; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .catalog-container { flex: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; align-content: start; }
+        .product-card { background: #1a1a1a; border-radius: 8px; border: 1px solid #272727; padding: 20px; transition: 0.2s; cursor: pointer; }
+        .product-card:hover { border-color: #415a77; transform: translateY(-3px); }
+        .product-price { color: #415a77; font-weight: bold; font-size: 1.2em; margin: 10px 0; }
+        .ai-sidebar { width: 350px; background: #0f0f0f; border-left: 1px solid #272727; display: flex; flex-direction: column; }
+        .chat-header { padding: 20px; border-bottom: 1px solid #272727; font-weight: bold; color: #415a77; letter-spacing: 1px; }
+        .chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; font-size: 0.9em; }
+        .msg { padding: 12px; border-radius: 10px; max-width: 80%; line-height: 1.4; }
+        .bot { background: #222; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .user { background: #415a77; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .chat-input-area { padding: 20px; border-top: 1px solid #272727; display: flex; gap: 10px; }
+        input { flex: 1; background: #222; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; }
+        button { background: #415a77; border: none; color: white; padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .back-link { color: #888; text-decoration: none; font-size: 0.8em; font-weight: bold; }
+        .back-link:hover { color: white; }
+    </style>
+</head>
+<body>
+
+    <aside class="filter-sidebar">
+        <a href="index.html" class="back-link">← BACK TO MUSIC</a>
+        <h2 style="font-size: 1.2em; letter-spacing: 2px;">SERVICES</h2>
+        <input type="text" placeholder="Filter services..." id="serviceSearch">
+    </aside>
+
+    <main class="catalog-container" id="serviceGrid"></main>
+
+    <aside class="ai-sidebar">
+        <div class="chat-header">AZUL-BOT // SALES AGENT</div>
+        <div class="chat-window" id="chatWindow">
+            <div class="msg bot">Hello! I can provide quotes for Ray's services or help you find a specific tool. What are you looking for?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Ask about a price...">
+            <button onclick="sendMessage()">SEND</button>
+        </div>
+    </aside>
+
+<script>
+    let services = [];
+
+    fetch('services.json')
+        .then(res => res.json())
+        .then(data => {
+            services = data;
+            renderServices(data);
+        });
+
+    function renderServices(data) {
+        const grid = document.getElementById('serviceGrid');
+        grid.innerHTML = data.map(s => `
+            <div class="product-card">
+                <div style="font-size: 0.7em; color: #888;">${s.category}</div>
+                <h3 style="margin: 5px 0;">${s.name}</h3>
+                <div class="product-price">$${s.price}</div>
+                <p style="font-size: 0.8em; color: #aaa;">${s.description}</p>
+            </div>
+        `).join('');
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('userInput');
+        const window = document.getElementById('chatWindow');
+        const query = input.value.toLowerCase();
+        if(!query) return;
+
+        // User Message
+        window.innerHTML += `<div class="msg user">${input.value}</div>`;
+        
+        // Bot Logic (RAG Simulation)
+        setTimeout(() => {
+            const match = services.find(s => query.includes(s.name.toLowerCase()) || s.tags.some(t => query.includes(t.toLowerCase())));
+            
+            if (match) {
+                window.innerHTML += `<div class="msg bot">I found a match! The <strong>${match.name}</strong> package is $${match.price}. It includes ${match.description}</div>`;
+            } else {
+                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" style="color: #415a77;">Contact Us</a></strong> page to get a custom quote from Ray!</div>`;
+            }
+            window.scrollTop = window.scrollHeight;
+        }, 600);
+
+        input.value = '';
+    }
+</script>
+</body>
+</html>
