@@ -441,13 +441,14 @@
             // 2. Check Primary Genre Dropdown
             const matchesGenre = (selectedGenre === "All") ? true : (song.genre === selectedGenre);
             
-            // 3. Check Tags (The new Multi-Select Logic)
+            // 3. Check Tags (The Inclusive "OR" Logic)
             let matchesTag = false;
             if (activeTags.includes('All')) {
                 matchesTag = true;
             } else {
-                // The .every() method ensures the song contains ALL of the selected tags (AND logic)
-                matchesTag = activeTags.every(t => song.tags && song.tags.includes(t));
+                // CHANGED FROM .every() TO .some()
+                // Now, if a song has ANY of the selected tags, it gets included!
+                matchesTag = activeTags.some(t => song.tags && song.tags.includes(t));
             }
 
             return matchesText && matchesGenre && matchesTag;
