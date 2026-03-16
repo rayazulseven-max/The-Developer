@@ -13,7 +13,7 @@
     "category": "Web Design",
     "price": 1200,
     "description": "Transforming legacy HTML sites into modern, responsive dark-mode apps.",
-    "tags": ["Modernization", "UX/UI", "CSS3", "Website", "Frontend", "Redesign", "HTML", "Webpage"]
+    "tags": ["Modernization", "UX/UI", "CSS3", "Redesign", "Legacy", "Update", "Refresh", "Overhaul"]
   },
   {
     "id": "svc_003",
@@ -76,7 +76,8 @@
     "name": "Custom Full-Stack Website",
     "category": "Web Design",
     "price": "500+",
-    "description": "End-to-end web development from scratch. Ranges up to $10k+ depending on complexity (databases, APIs, user authentication).",
-    "tags": ["Website", "Scratch", "Custom", "Full-Stack", "Frontend", "Backend", "Web App", "HTML", "React"]
+    "description": "End-to-end web development from scratch with advanced data integrations. Ranges up to $10k+ depending on complexity (custom APIs, Vertex AI RAG pipelines, Google Analytics, and dynamic databases).",
+    "tags": ["Website", "Scratch", "Custom", "Full-Stack", "Build", "New Site", "Ground Up", "React", "Vertex AI", "Google Analytics", "Data Analytics", "Pro Site"]
   }
 ]
+
