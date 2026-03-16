@@ -34,14 +34,40 @@ async def chat_bot(query: str):
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_file.write(f"[{timestamp}] User Asked: {query}\n")
 
-    # 3. RapidFuzz searches the dictionary values. 
+    # --- 3. THE INTENT INTERCEPTOR ---
+    # Hardcoded routing layer to catch explicit web requests before RapidFuzz guesses
+    update_keywords = ["update", "old", "legacy", "fix", "redesign", "overhaul"]
+    build_keywords = ["scratch", "new", "build", "create", "make me a"]
+
+    # Check for legacy update intent
+    if any(word in query for word in update_keywords) and ("site" in query or "website" in query):
+        matched_id = "svc_002"
+        for service in services_db:
+            if service['id'] == matched_id:
+                return {
+                    "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
+                    "match": True
+                }
+
+    # Check for new build intent
+    elif any(word in query for word in build_keywords) and ("site" in query or "website" in query or "app" in query):
+        matched_id = "svc_010"
+        for service in services_db:
+            if service['id'] == matched_id:
+                return {
+                    "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
+                    "match": True
+                }
+    # ---------------------------------
+
+    # 4. RapidFuzz searches the dictionary values if no explicit intent is triggered. 
     # It returns a tuple: (matched_string, score, dictionary_key)
     best_match = process.extractOne(query, search_dict, scorer=fuzz.WRatio)
     
     if best_match and best_match[1] > 70:
         matched_id = best_match[2] # This extracts the service['id'] we assigned as the key
         
-        # 4. Find the exact service using its unique ID instead of guessing by text
+        # Find the exact service using its unique ID instead of guessing by text
         for service in services_db:
             if service['id'] == matched_id:
                 return {
@@ -57,4 +83,5 @@ async def chat_bot(query: str):
 
 if __name__ == "__main__":
     import uvicorn
+    # Keeping this set up for local testing; Render will override this in production
     uvicorn.run(app, host="127.0.0.1", port=8000)
