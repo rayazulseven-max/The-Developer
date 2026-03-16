@@ -36,13 +36,15 @@ async def chat_bot(query: str):
         matched_text = best_match[0]
         for service in services_db:
             if matched_text == service['name'] or matched_text in service['tags']:
+                # Updated with <strong> tags instead of **
                 return {
-                    "response": f"I think you're looking for our **{service['name']}** package (${service['price']}). {service['description']}",
+                    "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
                     "match": True
                 }
     
+    # Updated with the exact HTML link to trigger your modal
     return {
-        "response": "I'm not exactly sure what you need, but I can definitely help! Why don't you fill out the **Contact Form** for a custom quote?",
+        "response": 'I\'m not exactly sure what you need, but I can definitely help! Why don\'t you fill out the <strong><a href="#" onclick="openModal(); return false;" style="color: #415a77;">Contact Form</a></strong> for a custom quote?',
         "match": False
     }
 
