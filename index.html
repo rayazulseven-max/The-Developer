@@ -19,6 +19,91 @@
             -webkit-user-select: none;
             user-select: none;
         }
+        /* 5. Resume Modal */
+        .modal-overlay {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #0f0f0f, #151515);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #888;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .modal-section h3 {
+            color: #415a77;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 5px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #415a77;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .contact-btn:hover {
+            background-color: #5a7b9e;
+        }
 
         /* 1. Hero Section */
         .hero {
@@ -230,15 +315,68 @@
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
 
-    <footer class="social-links">
+        <footer class="social-links">
         <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
         <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
+        <a href="#" id="openModalBtn">Resume / About ↗</a>
     </footer>
+    <div id="resumeModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            
+            <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase; letter-spacing: 2px;">The Blueprint</h2>
+            
+            <div class="modal-section">
+                <h3>Education</h3>
+                <p><strong>Western Governors University (WGU)</strong></p>
+                <p style="color: #888; font-size: 0.9rem; margin-top: 5px;">Bachelor of Science — Data Analytics</p>
+            </div>
+
+            <div class="modal-section">
+                <h3>Verified Credentials</h3>
+                <ul style="color: #888; font-size: 0.95rem; line-height: 1.6; padding-left: 20px;">
+                    <li><strong style="color: #fff;">IBM:</strong> Artificial Intelligence Engineering Professional Certificate</li>
+                    <li><strong style="color: #fff;">AAPC:</strong> Professional Medical Coding Certification</li>
+                </ul>
+            </div>
+
+            <div class="modal-section">
+                <h3>Core Arsenal</h3>
+                <p style="color: #888; font-size: 0.95rem; line-height: 1.6;">
+                    Python • SQL • OSINT Data Harvesting • RAG Architecture • Generative AI Tooling • Data Visualization • UI/UX Engineering
+                </p>
+            </div>
+            
+            <a href="mailto:rayazulseven@gmail.com" class="contact-btn">Initiate Contact</a>
+        </div>
+    </div>
+
 
         <script>
         // IP Protection
         document.addEventListener('contextmenu', event => event.preventDefault());
-    </script>
+            // Modal Logic
+        const modal = document.getElementById("resumeModal");
+        const openBtn = document.getElementById("openModalBtn");
+        const closeBtn = document.getElementById("closeModalBtn");
+
+        openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            modal.classList.add("show");
+        });
+
+        closeBtn.addEventListener("click", () => {
+            modal.classList.remove("show");
+        });
+
+        // Close if user clicks outside the modal box
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.remove("show");
+            }
+        });
+
+        </script>
     
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
