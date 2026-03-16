@@ -50,19 +50,34 @@
             line-height: 1.6;
         }
         
-        .ibm-badge {
-            display: inline-block;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #ddd;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-top: 20px;
-            text-transform: uppercase;
+                /* 1.5 Certifications Grid */
+        .certifications-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 35px;
+            flex-wrap: wrap;
+            animation: slideUp 1.2s ease-out;
         }
+
+        .cert-badge-wrapper {
+            background: #111; /* Matches the tech-stack pills */
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px 15px 5px 15px; /* Tuned specifically for Credly's iframe padding */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-badge-wrapper:hover {
+            border-color: #415a77;
+            background: #1a1a1a;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
 
         /* 2. The Suite (Project Grid) */
         .suite-grid {
@@ -173,12 +188,24 @@
 </head>
 <body>
 
-    <header class="hero">
+        <header class="hero">
         <h1>Ray Azul Perez</h1>
         <h2>AI Developer • Data Analyst • UI Engineer</h2>
         <p class="mission-statement">Bridging the gap between raw data and human experience. I build intelligent, data-driven web applications and automated systems that scale.</p>
-        <div class="ibm-badge">✦ IBM Certified AI Engineer</div>
+        
+        <div class="certifications-container">
+            
+            <div class="cert-badge-wrapper">
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="e95f61c5-c061-4f28-a74c-2cae0f177f0e" data-share-badge-host="https://www.credly.com"></div>
+            </div>
+
+            <div class="cert-badge-wrapper">
+                <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="a3319fe0-1c43-4067-b43a-651550c9e078" data-share-badge-host="https://www.credly.com"></div>
+            </div>
+
+        </div>
     </header>
+
 
     <main class="suite-grid">
         <a href="music.html" class="project-card">
@@ -208,9 +235,11 @@
         <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
     </footer>
 
-    <script>
+        <script>
         // IP Protection
         document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
+    
+    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
