@@ -71,4 +71,12 @@
     "description": "Custom Python scripts to automatically generate and email weekly KPI reports.",
     "tags": ["Python", "Automation", "Reporting", "Emails", "Cron", "KPI", "Weekly", "Script"]
   }
+  {
+    "id": "svc_010",
+    "name": "Custom Full-Stack Website",
+    "category": "Web Design",
+    "price": "500+",
+    "description": "End-to-end web development from scratch. Ranges up to $10k+ depending on complexity (databases, APIs, user authentication).",
+    "tags": ["Website", "Scratch", "Custom", "Full-Stack", "Frontend", "Backend", "Web App", "HTML", "React"]
+  }
 ]
