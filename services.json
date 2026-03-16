@@ -5,7 +5,7 @@
     "category": "AI Development",
     "price": 2500,
     "description": "Specialized LLM fine-tuning for niche industry datasets.",
-    "tags": ["Python", "Machine Learning", "Enterprise"]
+    "tags": ["Python", "Machine Learning", "Enterprise", "LLM", "GPT", "Artificial Intelligence", "Model", "Fine-tuning"]
   },
   {
     "id": "svc_002",
@@ -13,7 +13,7 @@
     "category": "Web Design",
     "price": 1200,
     "description": "Transforming legacy HTML sites into modern, responsive dark-mode apps.",
-    "tags": ["Modernization", "UX/UI", "CSS3"]
+    "tags": ["Modernization", "UX/UI", "CSS3", "Website", "Frontend", "Redesign", "HTML", "Webpage"]
   },
   {
     "id": "svc_003",
@@ -21,7 +21,7 @@
     "category": "Automation",
     "price": 800,
     "description": "RAG-based chatbot deployment using existing JSON databases.",
-    "tags": ["Chatbots", "API", "Customer Service"]
+    "tags": ["Chatbots", "API", "Customer Service", "Bot", "Agent", "Support", "RAG", "Automated Reply"]
   },
   {
     "id": "svc_004",
@@ -29,7 +29,7 @@
     "category": "Data Analytics",
     "price": 2000,
     "description": "Machine learning model to identify at-risk customers before they leave.",
-    "tags": ["Machine Learning", "Python", "Predictive"]
+    "tags": ["Machine Learning", "Python", "Predictive", "Churn", "Retention", "Forecast", "Customers"]
   },
   {
     "id": "svc_005",
@@ -37,7 +37,7 @@
     "category": "Data Analytics",
     "price": 1500,
     "description": "Custom data visualization dashboards to track real-time business metrics.",
-    "tags": ["Data Visualization", "BI", "Analytics"]
+    "tags": ["Data Visualization", "BI", "Analytics", "Dashboard", "Graphs", "Metrics", "Stats", "Tableau"]
   },
   {
     "id": "svc_006",
@@ -45,7 +45,7 @@
     "category": "Data Collection",
     "price": 1100,
     "description": "Automated web scraping and open-source intelligence gathering scripts.",
-    "tags": ["OSINT", "Python", "Web Scraping"]
+    "tags": ["OSINT", "Python", "Web Scraping", "Data Collection", "Intelligence", "Harvesting", "Extraction"]
   },
   {
     "id": "svc_007",
@@ -53,7 +53,7 @@
     "category": "Data Engineering",
     "price": 1200,
     "description": "Query auditing and schema restructuring to improve database performance.",
-    "tags": ["SQL", "Database", "Performance"]
+    "tags": ["SQL", "Database", "Performance", "Queries", "Backend", "Speed", "Schema"]
   },
   {
     "id": "svc_008",
@@ -61,7 +61,7 @@
     "category": "Data Analytics",
     "price": 800,
     "description": "Deep-dive statistical analysis into raw datasets to uncover hidden trends.",
-    "tags": ["Python", "Pandas", "EDA"]
+    "tags": ["Python", "Pandas", "EDA", "Statistics", "Trends", "Analysis", "Report"]
   },
   {
     "id": "svc_009",
@@ -69,6 +69,6 @@
     "category": "Automation",
     "price": 600,
     "description": "Custom Python scripts to automatically generate and email weekly KPI reports.",
-    "tags": ["Python", "Automation", "Reporting"]
+    "tags": ["Python", "Automation", "Reporting", "Emails", "Cron", "KPI", "Weekly", "Script"]
   }
 ]
