@@ -19,7 +19,7 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        /* 5. Resume Modal */
+        /* 5. Resume & Contact Modals */
         .modal-overlay {
             display: none; 
             position: fixed; 
@@ -52,6 +52,7 @@
             transform: translateY(20px);
             transition: transform 0.3s ease;
             box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+            box-sizing: border-box;
         }
 
         .modal-overlay.show .modal-content {
@@ -89,7 +90,7 @@
         .contact-btn {
             display: inline-block;
             margin-top: 15px;
-            padding: 10px 20px;
+            padding: 12px 20px;
             background-color: #415a77;
             color: #fff;
             text-decoration: none;
@@ -99,6 +100,10 @@
             width: 100%;
             box-sizing: border-box;
             text-align: center;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: inherit;
         }
 
         .contact-btn:hover {
@@ -135,7 +140,7 @@
             line-height: 1.6;
         }
         
-                /* 1.5 Certifications Grid */
+        /* 1.5 Certifications Grid */
         .certifications-container {
             display: flex;
             justify-content: center;
@@ -146,10 +151,10 @@
         }
 
         .cert-badge-wrapper {
-            background: #111; /* Matches the tech-stack pills */
+            background: #111; 
             border: 1px solid #333;
             border-radius: 12px;
-            padding: 15px 15px 5px 15px; /* Tuned specifically for Credly's iframe padding */
+            padding: 15px 15px 5px 15px; 
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -162,7 +167,6 @@
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
-
 
         /* 2. The Suite (Project Grid) */
         .suite-grid {
@@ -273,24 +277,20 @@
 </head>
 <body>
 
-        <header class="hero">
+    <header class="hero">
         <h1>Ray Azul Perez</h1>
         <h2>AI Developer • Data Analyst • UI Engineer</h2>
         <p class="mission-statement">Bridging the gap between raw data and human experience. I build intelligent, data-driven web applications and automated systems that scale.</p>
         
         <div class="certifications-container">
-            
             <div class="cert-badge-wrapper">
                 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="e95f61c5-c061-4f28-a74c-2cae0f177f0e" data-share-badge-host="https://www.credly.com"></div>
             </div>
-
             <div class="cert-badge-wrapper">
                 <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="a3319fe0-1c43-4067-b43a-651550c9e078" data-share-badge-host="https://www.credly.com"></div>
             </div>
-
         </div>
     </header>
-
 
     <main class="suite-grid">
         <a href="music.html" class="project-card">
@@ -315,11 +315,12 @@
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
 
-        <footer class="social-links">
+    <footer class="social-links">
         <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
         <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
         <a href="#" id="openModalBtn">Resume / About ↗</a>
     </footer>
+
     <div id="resumeModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" id="closeModalBtn">&times;</span>
@@ -333,23 +334,18 @@
             </div>
 
             <div class="modal-section">
-    <h3>Verified Credentials</h3>
-    <ul style="color: #888; font-size: 0.95rem; line-height: 1.6; padding-left: 20px;">
-        <li>
-            <strong style="color: #fff;">IBM:</strong> Artificial Intelligence Engineering Professional Certificate
-        </li>
-        <li>
-            <strong style="color: #fff;">Google:</strong> Advanced Data Analytics & Vertex AI Implementation 
-        </li>
-        <li>
-            <strong style="color: #fff;">AAPC:</strong> Professional Medical Coding Certification 
-            <span style="display: block; font-size: 0.85rem; color: #5a7b9e; margin-top: 2px;">
-                Specializing in bridging medical data taxonomies with Vertex AI RAG pipelines.
-            </span>
-        </li>
-    </ul>
-</div>
-
+                <h3>Verified Credentials</h3>
+                <ul style="color: #888; font-size: 0.95rem; line-height: 1.6; padding-left: 20px;">
+                    <li><strong style="color: #fff;">IBM:</strong> Artificial Intelligence Engineering Professional Certificate</li>
+                    <li><strong style="color: #fff;">Google:</strong> Advanced Data Analytics & Vertex AI Implementation</li>
+                    <li>
+                        <strong style="color: #fff;">AAPC:</strong> Professional Medical Coding Certification
+                        <span style="display: block; font-size: 0.85rem; color: #5a7b9e; margin-top: 2px;">
+                            Specializing in bridging medical data taxonomies with Vertex AI RAG pipelines.
+                        </span>
+                    </li>
+                </ul>
+            </div>
 
             <div class="modal-section">
                 <h3>Core Arsenal</h3>
@@ -358,37 +354,69 @@
                 </p>
             </div>
             
-            <a href="mailto:rayazulseven@gmail.com" class="contact-btn">Initiate Contact</a>
+            <button class="contact-btn" onclick="openContactModal()">Initiate Contact</button>
         </div>
     </div>
 
+    <div id="contactModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeContactModal()">&times;</span>
+            <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase; letter-spacing: 2px;">Inquiry</h2>
+            <p style="color: #888; font-size: 0.85em; margin-bottom: 20px;">Send a message directly to Ray's workspace.</p>
+            
+            <form action="https://formspree.io/f/xvzwbvwv" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" name="name" placeholder="Name" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
+                <input type="email" name="email" placeholder="Email" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
+                <textarea name="message" placeholder="Project Details" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; min-height: 100px; outline: none; font-family: inherit; resize: vertical;"></textarea>
+                <button type="submit" class="contact-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
 
-        <script>
+    <script>
         // IP Protection
         document.addEventListener('contextmenu', event => event.preventDefault());
-            // Modal Logic
-        const modal = document.getElementById("resumeModal");
+        
+        // Modal Logic Elements
+        const resumeModal = document.getElementById("resumeModal");
+        const contactModal = document.getElementById("contactModal");
         const openBtn = document.getElementById("openModalBtn");
         const closeBtn = document.getElementById("closeModalBtn");
 
+        // Open Resume
         openBtn.addEventListener("click", (e) => {
             e.preventDefault();
-            modal.classList.add("show");
+            resumeModal.classList.add("show");
         });
 
+        // Close Resume
         closeBtn.addEventListener("click", () => {
-            modal.classList.remove("show");
+            resumeModal.classList.remove("show");
         });
 
-        // Close if user clicks outside the modal box
+        // Open Contact Form (and close Resume)
+        function openContactModal() {
+            resumeModal.classList.remove("show");
+            contactModal.classList.add("show");
+        }
+
+        // Close Contact Form
+        function closeContactModal() {
+            contactModal.classList.remove("show");
+        }
+
+        // Close if user clicks outside either modal box
         window.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.classList.remove("show");
+            if (e.target === resumeModal) {
+                resumeModal.classList.remove("show");
+            }
+            if (e.target === contactModal) {
+                contactModal.classList.remove("show");
             }
         });
-
-        </script>
+    </script>
     
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
+
