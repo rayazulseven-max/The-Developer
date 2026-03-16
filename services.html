@@ -190,7 +190,6 @@
         renderServices(filtered);
     }
 
-    // --- UPDATED AI BOT LOGIC ---
     async function sendMessage() {
         const input = document.getElementById('userInput');
         const window = document.getElementById('chatWindow');
@@ -201,8 +200,9 @@
         input.value = '';
 
         try {
-            // Calling the Python backend API
-            const response = await fetch(`http://127.0.0.1:8000/chat?query=${encodeURIComponent(query)}`);
+            // REPLACE THIS URL WITH YOUR ACTUAL RENDER URL ONCE IT DEPLOYS
+            // The updated fetch call pointing to your live Render API
+            const response = await fetch(`https://the-developer-hs1s.onrender.com/chat?query=${encodeURIComponent(query)}`);
             const data = await response.json();
             
             setTimeout(() => {
