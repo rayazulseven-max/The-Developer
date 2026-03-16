@@ -150,6 +150,7 @@
 <script>
     let services = [];
 
+    // Load initial grid data
     fetch('services.json')
         .then(res => res.json())
         .then(data => {
@@ -159,10 +160,7 @@
 
     function renderServices(data) {
         const grid = document.getElementById('serviceGrid');
-        
-        // Notice we added the onclick event dynamically using the service name!
         grid.innerHTML = data.map(s => {
-            // This safely handles any product names that have apostrophes in them
             const safeName = s.name.replace(/'/g, "\\'"); 
             return `
             <div class="product-card" onclick="openOrderModal('${safeName}')">
@@ -192,25 +190,28 @@
         renderServices(filtered);
     }
 
-    function sendMessage() {
+    // --- UPDATED AI BOT LOGIC ---
+    async function sendMessage() {
         const input = document.getElementById('userInput');
         const window = document.getElementById('chatWindow');
-        const query = input.value.toLowerCase();
+        const query = input.value;
         if(!query) return;
 
-        window.innerHTML += `<div class="msg user">${input.value}</div>`;
-        
-        setTimeout(() => {
-            const match = services.find(s => query.includes(s.name.toLowerCase()) || s.tags.some(t => query.includes(t.toLowerCase())));
-            
-            if (match) {
-                window.innerHTML += `<div class="msg bot">I found a match! The <strong>${match.name}</strong> package is $${match.price}. It includes ${match.description}</div>`;
-            } else {
-                window.innerHTML += `<div class="msg bot">I'm not sure about that specific request. You should check our <strong><a href="#" onclick="openModal(); return false;" style="color: #415a77;">Contact Us</a></strong> form to get a custom quote!</div>`;
-            }
-            window.scrollTop = window.scrollHeight;
-        }, 600);
+        window.innerHTML += `<div class="msg user">${query}</div>`;
         input.value = '';
+
+        try {
+            // Calling the Python backend API
+            const response = await fetch(`http://127.0.0.1:8000/chat?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            setTimeout(() => {
+                window.innerHTML += `<div class="msg bot">${data.response}</div>`;
+                window.scrollTop = window.scrollHeight;
+            }, 500);
+        } catch (error) {
+            window.innerHTML += `<div class="msg bot">System Error: Make sure the Python backend is running!</div>`;
+        }
     }
 
     // --- Modal Logic ---
@@ -218,13 +219,11 @@
     function closeModal() { document.getElementById('contactModal').style.display = 'none'; }
     
     function openOrderModal(productName) { 
-        // This is where the magic happens: it pre-fills the input box with the product name
         document.getElementById('orderProduct').value = "I'd like to order: " + productName;
         document.getElementById('orderModal').style.display = 'flex'; 
     }
     function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
     
-    // Close whichever modal is open if the user clicks the dark background
     window.onclick = function(event) {
         const contactModal = document.getElementById('contactModal');
         const orderModal = document.getElementById('orderModal');
@@ -234,11 +233,9 @@
 
     async function submitForm(event, modalId) {
         event.preventDefault(); 
-        
         const form = event.target;
         const btn = form.querySelector('button');
         const originalText = btn.innerText;
-        
         btn.innerText = "Sending...";
         
         const data = new FormData(form);
@@ -253,9 +250,7 @@
             if (response.ok) {
                 btn.innerText = "Sent! ✓";
                 btn.style.background = "#2e7d32"; 
-                
                 setTimeout(() => {
-                    // Uses the dynamically passed modalId to close the correct window
                     document.getElementById(modalId).style.display = 'none';
                     btn.innerText = originalText;
                     btn.style.background = "#415a77";
