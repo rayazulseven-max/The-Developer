@@ -243,6 +243,14 @@
                 <h2>Christmas Pulse <br><span style="font-size: 0.6em; color:#888;">(크리스마스 리듬)</span></h2>
                 <p>5 Tracks</p>
             </div>
+            <div class="album-card" onclick="selectAlbum('Neural Drift')">
+                <h2>Neural Drift</h2>
+                <p>4 Tracks</p>
+            </div>
+            <div class="album-card" onclick="selectAlbum('The Void')" style="background: linear-gradient(145deg, #2a0808, #0f0f0f); border-color: #4a1515;">
+                <h2 style="color: #ff4444;">The Void</h2>
+                <p style="color: #aa5555; font-size: 0.8em;">2 Tracks (Warning)</p>
+            </div>
         </div>
 
         <div id="songListContainer" style="display: none;">
@@ -283,7 +291,7 @@
     let catalogData = [];
     let currentPlaylist = []; 
     let currentSongIndex = -1; 
-    let currentAlbum = 'All'; // Track which album is selected
+    let currentAlbum = 'All';
 
     document.addEventListener("DOMContentLoaded", () => {
         fetch('songs.json')
@@ -292,9 +300,8 @@
                 catalogData = data;
                 currentPlaylist = data; 
                 
-                // FLIPPED THE ORDER HERE:
-                renderTagFilters(); // 1. Build the buttons first!
-                filterCatalog();    // 2. Then run the filter logic.
+                renderTagFilters(); 
+                filterCatalog();    
             })
             .catch(err => console.error("Error loading the catalog:", err));
 
@@ -413,7 +420,6 @@
         filterCatalog('user');
     }
 
-    // New function to jump into an Album
     function selectAlbum(albumName) {
         currentAlbum = albumName;
         document.getElementById('searchBar').value = '';
@@ -426,7 +432,6 @@
         filterCatalog('album');
     }
 
-    // New function to reset everything back to the Home Grid
     function resetView() {
         currentAlbum = 'All';
         document.getElementById('searchBar').value = '';
@@ -440,7 +445,6 @@
     }
 
     function filterCatalog(source = 'default') {
-        // If the user uses search or tags, we exit the Album View and search globally
         if (source === 'user') {
             currentAlbum = 'All';
         }
@@ -450,17 +454,15 @@
         const activeTagElements = document.querySelectorAll('.tag-btn.active');
         const activeTags = Array.from(activeTagElements).map(el => el.innerText);
 
-        // Determine if we are at the "Home" state
         const isDefaultState = (searchText === '' && selectedGenre === 'All' && activeTags.includes('All') && currentAlbum === 'All');
 
         if (isDefaultState) {
             document.getElementById('albumGrid').style.display = 'flex';
             document.getElementById('songListContainer').style.display = 'none';
             document.getElementById('resultCount').innerText = "SELECT AN ALBUM OR SEARCH";
-            return; // Stop processing since we don't need a list yet
+            return; 
         }
 
-        // Otherwise, hide the grid and show the list
         document.getElementById('albumGrid').style.display = 'none';
         document.getElementById('songListContainer').style.display = 'block';
 
@@ -489,7 +491,6 @@
             return matchesText && matchesGenre && matchesTag && matchesAlbum;
         });
         
-        // ADD THIS NEW LINE RIGHT HERE:
         filtered.sort((a, b) => a.track - b.track);
         
         currentPlaylist = filtered;
