@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray Azul Perez | Clinical Search Engine</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #030303; 
+            color: #ffffff; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background-color: #0f0f0f;
+            border-right: 1px solid #272727;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .brand-logo-text {
+            color: #ffffff;
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .developer-tag { font-size: 0.8em; color: #415a77; margin: 0; letter-spacing: 1px; font-weight: bold; }
+        
+        .sidebar-link {
+            color: #aaaaaa;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: color 0.2s;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .sidebar-link:hover { color: #ffffff; }
+
+        /* Search & Filters */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"] { 
+            padding: 14px; font-size: 15px; border: 1px solid #333; border-radius: 8px; 
+            background: #1a1a1a; color: #fff; outline: none; width: 100%; box-sizing: border-box;
+            font-family: monospace;
+        }
+        input[type="text"]:focus { border-color: #415a77; }
+        input[type="text"] { user-select: text; -webkit-user-select: text; }
+
+        .category-title { font-size: 0.8em; color: #888; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; border-bottom: 1px solid #222; padding-bottom: 5px;}
+        
+        .cat-btn { 
+            background: transparent; color: #aaa; border: 1px solid #333; border-radius: 6px; 
+            padding: 10px 15px; font-size: 0.85em; cursor: pointer; transition: all 0.2s; text-align: left;
+            width: 100%; margin-bottom: 8px; font-weight: bold;
+        }
+        .cat-btn:hover { background: #1a1a1a; border-color: #555; }
+        .cat-btn.active { background: rgba(65, 90, 119, 0.15); color: #8bb4e5; border-color: #415a77; }
+
+        /* Main Content Area */
+        .main-view { 
+            flex: 1; padding: 40px; overflow-y: auto; background-color: #050505;
+        }
+
+        .header-stats {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #272727; padding-bottom: 15px; margin-bottom: 30px;
+        }
+        
+        .result-count { font-size: 0.9em; color: #aaaaaa; font-weight: bold; letter-spacing: 1px; }
+
+        /* Clinical Data Grid */
+        .data-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; 
+        }
+
+        .code-card {
+            background: linear-gradient(145deg, #111, #0a0a0a);
+            border: 1px solid #222; border-radius: 10px;
+            padding: 25px; display: flex; flex-direction: column; gap: 12px;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .code-card:hover { transform: translateY(-4px); border-color: #415a77; }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .hcpcs-code { font-size: 1.8rem; font-weight: 900; color: #8bb4e5; font-family: monospace; letter-spacing: 2px; margin: 0; }
+        .category-badge { background: #222; color: #aaa; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;}
+        
+        .description { font-size: 0.95rem; color: #ddd; line-height: 1.5; margin: 0; }
+        
+        .price { font-size: 1.1rem; color: #55aa77; font-weight: bold; margin: 0; }
+        
+        .tags-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 15px; border-top: 1px dashed #222; }
+        .layman-tag { font-size: 0.75rem; color: #666; background: #151515; padding: 3px 8px; border-radius: 12px; border: 1px solid #222;}
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div>
+        <h2 class="brand-logo-text">RAY AZUL PEREZ</h2>
+        <p class="developer-tag">Clinical Intelligence Engine</p>
+    </div>
+    
+    <div>
+        <a href="index.html" class="sidebar-link">← Back to Portfolio</a>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Search Code, Term, or Supply..." onkeyup="filterDatabase()">
+    </div>
+    
+    <div>
+        <div class="category-title">Taxonomy Filter</div>
+        <div id="categoryFilters">
+            <button class="cat-btn active" onclick="setCategory('All', this)">All Codes</button>
+            <button class="cat-btn" onclick="setCategory('DME', this)">Durable Medical Eq. (DME)</button>
+            <button class="cat-btn" onclick="setCategory('Drugs', this)">Injectable Drugs (J-Codes)</button>
+            <button class="cat-btn" onclick="setCategory('Orthotics', this)">Orthotics / Prosthetics</button>
+            <button class="cat-btn" onclick="setCategory('Supplies', this)">Medical Supplies</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-view">
+    <div class="header-stats">
+        <h2 style="margin:0; font-size: 1.5rem; letter-spacing: 1px;">HCPCS Level II Explorer</h2>
+        <div id="resultCount" class="result-count">LOADING DATABASE...</div>
+    </div>
+    
+    <div id="dataGrid" class="data-grid">
+        </div>
+</div>
+
+<script>
+    let hcpcsData = [];
+    let currentCategory = 'All';
+
+    // Fetch the JSON database
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch('hcpcs.json')
+            .then(response => response.json())
+            .then(data => {
+                hcpcsData = data;
+                filterDatabase(); // Initial render
+            })
+            .catch(error => {
+                console.error("Error loading HCPCS data:", error);
+                document.getElementById('resultCount').innerText = "DATABASE ERROR";
+            });
+    });
+
+    // Handle Category Buttons
+    function setCategory(category, btnElement) {
+        currentCategory = category;
+        document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        filterDatabase();
+    }
+
+    // Core Filtering Logic
+    function filterDatabase() {
+        const query = document.getElementById('searchBar').value.toLowerCase().trim();
+        const grid = document.getElementById('dataGrid');
+        grid.innerHTML = '';
+
+        const filteredCodes = hcpcsData.filter(item => {
+            // 1. Check Category
+            const matchesCategory = (currentCategory === 'All') || (item.category === currentCategory);
+            if (!matchesCategory) return false;
+
+            // 2. Check Search Query (Matches Code, Description, or Layman Tags)
+            if (query === '') return true;
+
+            const codeMatch = item.code.toLowerCase().includes(query);
+            const descMatch = item.description.toLowerCase().includes(query);
+            const tagMatch = item.tags && item.tags.some(tag => tag.toLowerCase().includes(query));
+
+            return codeMatch || descMatch || tagMatch;
+        });
+
+        // Update UI Count
+        document.getElementById('resultCount').innerText = `${filteredCodes.length} CODES FOUND`;
+
+        // Render Cards
+        filteredCodes.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'code-card';
+            
+            // Format Price
+            const formattedPrice = item.price_estimate > 0 ? `$${item.price_estimate.toFixed(2)}` : 'Pricing Varies';
+            
+            // Format Tags
+            let tagsHTML = '';
+            if (item.tags) {
+                tagsHTML = item.tags.map(tag => `<span class="layman-tag">${tag}</span>`).join('');
+            }
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <h3 class="hcpcs-code">${item.code}</h3>
+                    <span class="category-badge">${item.category}</span>
+                </div>
+                <p class="description">${item.description}</p>
+                <p class="price">${formattedPrice}</p>
+                <div class="tags-container">
+                    ${tagsHTML}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+</script>
+
+</body>
+</html>
