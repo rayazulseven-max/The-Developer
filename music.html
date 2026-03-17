@@ -127,6 +127,22 @@
     .song-item:hover { background: #222; }
     .song-item:active { transform: scale(0.99); background: #333; }
     .song-item.active-playing { background: #2a2a2a; border-left: 4px solid #ffffff; }
+
+    /* Explicit Track Custom Styling */
+    .song-item.explicit-track { 
+        border-left: 3px solid #8b0000; 
+        background: linear-gradient(90deg, rgba(139,0,0,0.08) 0%, transparent 100%); 
+    }
+    .song-item.explicit-track:hover { 
+        background: linear-gradient(90deg, rgba(139,0,0,0.15) 0%, transparent 100%); 
+    }
+    .song-item.explicit-track.active-playing { 
+        border-left: 4px solid #ff3333; 
+        background: linear-gradient(90deg, rgba(255,51,51,0.15) 0%, transparent 100%); 
+    }
+    .song-item.explicit-track .song-info h3 { 
+        color: #ff6666; 
+    }
     
     .song-info { flex: 1; padding-right: 20px; }
     .song-info h3 { margin: 0; font-size: 1.05em; color: #fff; font-weight: 600; }
@@ -202,7 +218,6 @@
     <a href="https://www.linkedin.com/in/ray-azul-dev/" class="sidebar-link" target="_blank">View LinkedIn Profile ↗</a>
 </div>
 
-    
     <div class="controls">
         <input type="text" id="searchBar" placeholder="Search tracks or creators..." onkeyup="filterCatalog('user')">
         <select id="genreFilter" onchange="filterCatalog('user')">
@@ -243,13 +258,9 @@
                 <h2>Christmas Pulse <br><span style="font-size: 0.6em; color:#888;">(크리스마스 리듬)</span></h2>
                 <p>5 Tracks</p>
             </div>
-            <div class="album-card" onclick="selectAlbum('Neural Drift')">
-                <h2>Neural Drift</h2>
-                <p>4 Tracks</p>
-            </div>
-            <div class="album-card" onclick="selectAlbum('The Void')" style="background: linear-gradient(145deg, #2a0808, #0f0f0f); border-color: #4a1515;">
-                <h2 style="color: #ff4444;">The Void</h2>
-                <p style="color: #aa5555; font-size: 0.8em;">2 Tracks (Warning)</p>
+            <div class="album-card" onclick="selectAlbum('Dissociated')">
+                <h2>Dissociated</h2>
+                <p>6 Tracks</p>
             </div>
         </div>
 
@@ -331,7 +342,12 @@
         songs.forEach((song, index) => {
             const writers = song.writers.join(', ');
             const li = document.createElement('li');
-            li.className = 'song-item';
+            
+            // Inject Custom Class and Emojis for Explicit Tracks
+            const explicitClass = song.isExplicit ? 'explicit-track' : '';
+            const explicitBadge = song.isExplicit ? '<span style="font-size: 0.85em; margin-left: 8px;" title="Explicit / Industrial Horror Theme">💀🔥</span>' : '';
+            
+            li.className = `song-item ${explicitClass}`;
             
             if (currentSongIndex === index) {
                 li.classList.add('active-playing');
@@ -340,7 +356,7 @@
             li.onclick = () => playTrack(song.title, writers, song.file, song.lyrics || "Details coming soon!");
             li.innerHTML = `
                 <div class="song-info">
-                    <h3>${song.title}</h3>
+                    <h3>${song.title} ${explicitBadge}</h3>
                     <p>${writers} • ${song.genre}</p>
                 </div>
                 <div class="play-indicator">▶</div>
