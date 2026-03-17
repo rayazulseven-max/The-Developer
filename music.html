@@ -163,6 +163,24 @@
         font-size: 2.5rem; font-weight: bold; color: rgba(255, 255, 255, 0.03);
         pointer-events: none; white-space: nowrap; z-index: 1; letter-spacing: 4px;
     }
+        /* Dynamic Explicit Watermark */
+    .lyrics-pane.explicit-mode::after {
+        content: "💀";
+        position: fixed; /* Keeps it locked in the center even when scrolling lyrics */
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%);
+        font-size: 15rem; 
+        opacity: 0.04; /* Extremely translucent */
+        pointer-events: none; 
+        z-index: 0;
+        filter: drop-shadow(0 0 20px #ff0000); /* Adds a faint red aura */
+    }
+    
+    /* Ensure lyrics stay readable above the watermarks */
+    .lyrics-pane {
+        z-index: 1;
+    }
     .disclaimer { font-size: 0.7em; color: #666; margin-top: 15px; text-align: justify; line-height: 1.4; }
 
     /* 7. App Bottom Player Bar */
@@ -384,6 +402,15 @@
         lyricsEl.scrollTop = 0; 
 
         currentSongIndex = currentPlaylist.findIndex(s => s.file === fileName);
+        
+        // --- NEW: Toggle the Explicit Skull Watermark ---
+        const currentSong = currentPlaylist[currentSongIndex];
+        if (currentSong && currentSong.isExplicit) {
+            lyricsEl.classList.add('explicit-mode');
+        } else {
+            lyricsEl.classList.remove('explicit-mode');
+        }
+        // ------------------------------------------------
         
         displaySongs(currentPlaylist);
 
