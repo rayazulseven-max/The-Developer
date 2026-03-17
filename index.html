@@ -53,7 +53,10 @@
             transition: transform 0.3s ease;
             box-shadow: 0 15px 40px rgba(0,0,0,0.7);
             box-sizing: border-box;
+            max-height: 85vh; /* Prevents it from being taller than the phone screen */
+            overflow-y: auto; /* Creates a scrollbar inside the modal if needed */
         }
+
 
         .modal-overlay.show .modal-content {
             transform: translateY(0);
