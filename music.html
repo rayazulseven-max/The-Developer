@@ -163,23 +163,32 @@
         font-size: 2.5rem; font-weight: bold; color: rgba(255, 255, 255, 0.03);
         pointer-events: none; white-space: nowrap; z-index: 1; letter-spacing: 4px;
     }
-        /* Dynamic Explicit Watermark */
+        /* 1. Turns the lyrics box dark red/black */
+    .lyrics-pane.explicit-mode {
+        background: linear-gradient(145deg, #1f0505, #0a0000);
+        border: 1px solid #4a1515;
+    }
+
+    /* 2. The Static Skull Watermark */
     .lyrics-pane.explicit-mode::after {
         content: "💀";
-        position: fixed; /* Keeps it locked in the center even when scrolling lyrics */
+        position: fixed; /* Keeps it locked in place while you scroll */
         top: 50%; 
-        left: 50%; 
-        transform: translate(-50%, -50%);
+        right: 12%; /* Aligns it inside the lyrics pane on desktop */
+        transform: translateY(-50%);
         font-size: 15rem; 
-        opacity: 0.04; /* Extremely translucent */
+        opacity: 0.15; /* Bumped up so you can actually see it! */
         pointer-events: none; 
         z-index: 0;
-        filter: drop-shadow(0 0 20px #ff0000); /* Adds a faint red aura */
+        filter: drop-shadow(0 0 30px #ff0000); /* Stronger red aura */
     }
-    
-    /* Ensure lyrics stay readable above the watermarks */
-    .lyrics-pane {
-        z-index: 1;
+
+    /* Keeps it centered if viewed on a mobile device */
+    @media (max-width: 900px) {
+        .lyrics-pane.explicit-mode::after {
+            right: 50%;
+            transform: translate(50%, -50%);
+        }
     }
     .disclaimer { font-size: 0.7em; color: #666; margin-top: 15px; text-align: justify; line-height: 1.4; }
 
