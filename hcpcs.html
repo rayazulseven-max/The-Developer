@@ -205,6 +205,55 @@
             font-weight: bold;
         }
         #chatInputArea button:hover { background-color: #5a7b9e; }
+        /* 📱 Mobile Adjustments */
+        @media (max-width: 900px) {
+            body { 
+                flex-direction: column; 
+                overflow-y: auto; /* Lets the whole page scroll naturally */
+                height: auto; 
+            }
+            
+            .sidebar { 
+                width: 100%; 
+                height: auto; 
+                border-right: none; 
+                border-bottom: 1px solid #272727; 
+                padding: 20px; 
+                box-sizing: border-box; 
+                overflow: visible;
+            }
+            
+            .main-view { 
+                padding: 20px 20px 100px 20px; /* Extra bottom padding so chat bot doesn't cover content */
+                overflow-y: visible; 
+            }
+            
+            .header-stats {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .data-grid { 
+                grid-template-columns: 1fr; /* Forces 1 clean column on mobile */
+            }
+            
+            /* Chatbot Mobile Fixes */
+            #chatbotWindow {
+                width: calc(100% - 40px); /* Keeps it from touching the edges */
+                right: 20px;
+                left: 20px;
+                bottom: 80px;
+                max-width: 400px;
+                margin: 0 auto; /* Centers it perfectly */
+            }
+            
+            #chatbotToggle {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
     </style>
 </head>
 <body>
