@@ -29,12 +29,13 @@ for service in services_db:
     combined_text = f"{service['name']} {service['category']} {service['description']} {' '.join(service['tags'])}"
     services_search_dict[service['id']] = combined_text
 
-# MEDICAL DICTIONARY
+# MEDICAL DICTIONARY: We make the description and tags repeat to give them more "weight"
 hcpcs_search_dict = {}
 for item in hcpcs_db:
     tags = " ".join(item.get('tags', []))
-    combined_text = f"{item['code']} {item['category']} {item['description']} {tags}"
-    hcpcs_search_dict[item['code']] = combined_text
+    # By repeating the description and tags, we force the fuzzy matcher to care more about them than the category
+    weighted_text = f"{item['description']} {item['description']} {tags} {tags} {item['code']}"
+    hcpcs_search_dict[item['code']] = weighted_text
 
 
 # 3. The Dual-Routing Endpoint
