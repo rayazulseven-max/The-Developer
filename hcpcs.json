@@ -49,8 +49,8 @@
   { "code": "J7507", "category": "Drugs", "description": "Tacrolimus, oral, per 1 mg", "price_estimate": 3.00, "tags": ["prograf", "transplant drug", "anti-rejection"] },
   { "code": "J9035", "category": "Drugs", "description": "Injection, bevacizumab, 10 mg", "price_estimate": 85.00, "tags": ["avastin", "chemotherapy", "cancer drug"] },
   { "code": "J9312", "category": "Drugs", "description": "Injection, rituximab, 10 mg", "price_estimate": 110.00, "tags": ["rituxan", "chemo", "lymphoma", "arthritis"] },
-  { "code": "V5261", "category": "DME", "description": "Hearing aid, digital, monaural, behind the ear", "price_estimate": 1200.00, "tags": ["hearing aid", "digital hearing aid", "ear device"] }
-  { "code": "A4670", "category": "DME", "description": "Automatic blood pressure monitor", "price_estimate": 45.00, "tags": ["blood pressure", "bpm", "cuff", "heart rate"] }
+  { "code": "V5261", "category": "DME", "description": "Hearing aid, digital, monaural, behind the ear", "price_estimate": 1200.00, "tags": ["hearing aid", "digital hearing aid", "ear device"] },
+  { "code": "A4670", "category": "DME", "description": "Automatic blood pressure monitor", "price_estimate": 45.00, "tags": ["blood pressure", "bpm", "cuff", "heart rate"] },
   { "code": "A4670", "category": "DME", "description": "Automatic blood pressure monitor", "price_estimate": 45.00, "tags": ["blood pressure", "bpm", "cuff", "heart rate", "monitor"] },
   { "code": "A4259", "category": "Supplies", "description": "Lancets, per box of 100", "price_estimate": 15.00, "tags": ["diabetes", "finger stick", "blood sugar", "testing", "supplies"] },
   { "code": "A4206", "category": "Supplies", "description": "Syringe with needle, sterile 1cc, each", "price_estimate": 1.50, "tags": ["needle", "injection", "syringe", "insulin needle", "supplies"] },
