@@ -70,8 +70,8 @@ async def chat_bot(query: str, context: str = "portfolio"):
         # A2. Clinical Fuzzy Matcher (For plain English searches)
         best_match = process.extractOne(query_lower, hcpcs_search_dict, scorer=fuzz.WRatio)
         
-        # Using a slightly lower threshold (65) to account for complex medical jargon differences
-        if best_match and best_match[1] > 65:
+        # INCREASED THRESHOLD: Raised from 65 to 80 to prevent aggressive hallucinations 
+        if best_match and best_match[1] > 80:
             matched_code = best_match[2] # Extracts the HCPCS Code we assigned as the key
             for item in hcpcs_db:
                 if item['code'] == matched_code:
@@ -81,7 +81,7 @@ async def chat_bot(query: str, context: str = "portfolio"):
                         "match": True
                     }
         
-        # A3. Medical Fallback
+        # A3. Medical Fallback (Will trigger much more often now if the query isn't a solid match)
         return {
             "response": "I couldn't find a direct clinical match. Please verify the supply name, drug, or HCPCS code.",
             "match": False
