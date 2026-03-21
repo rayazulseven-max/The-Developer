@@ -45,7 +45,19 @@
         }
 
         .modal-content {
-            background: linear-gradient(145deg, #0f0f0f, #151515); /* Back to pure dark */
+            background: linear-gradient(145deg, #0f0f0f, #151515);
+            /* --- FIXED WATERMARK --- */
+            /* --- FIXED WATERMARK & STRIPE --- */
+            background-image: linear-gradient(rgba(15, 15, 15, 0.92), rgba(15, 15, 15, 0.92)), url('logo/Azul.png');
+            background-size: 280px; /* Made slightly larger for center placement */
+            background-position: center; /* Dead center behind the text */
+            background-repeat: no-repeat;
+            background-blend-mode: screen; /* Changed to 'screen' to interact better with the dark background */
+            background-size: cover, 280px; /* Gradient covers everything, logo stays 280px */
+            background-position: center, center; 
+            background-repeat: no-repeat, no-repeat;
+            background-blend-mode: screen; 
+            
             border: 1px solid #333;
             border-radius: 12px;
             padding: 40px;
@@ -58,22 +70,6 @@
             box-sizing: border-box;
             max-height: 85vh; 
             overflow-y: auto; 
-            z-index: 1; /* Ensures your text stays on top */
-        }
-
-        /* The True Watermark */
-        .modal-content::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('logo/Azul.png');
-            background-size: 280px;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.15; /* Drops the logo transparency without adding grey */
-            z-index: -1; /* Tucks it behind the text */
-            pointer-events: none; /* Stops it from messing with your clicks */
-            border-radius: 12px;
         }
 
 
@@ -406,7 +402,7 @@
         <div class="tech-pill">UI/UX DESIGN</div>
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
-    
+
     <footer class="social-links" style="justify-content: center; margin-bottom: 20px; width: 100%; max-width: 1200px;">
         <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
         <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
@@ -599,7 +595,7 @@
             </form>
         </div>
     </div>
-    
+
     <button id="scrollTopBtn" title="Return to Top">↑</button>
 
     <script>
@@ -621,7 +617,7 @@
                 }, 2000);
             });
         });
-        
+
         // IP Protection
         document.addEventListener('contextmenu', event => event.preventDefault());
 
@@ -662,7 +658,7 @@
                 contactModal.classList.remove("show");
             }
         });
-        
+
         // --- System Logic: Observer & Scroll ---
         const trigger = document.getElementById('case-study-trigger');
         const content = document.getElementById('case-study-content');
