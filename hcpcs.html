@@ -96,11 +96,35 @@
 
         .code-card {
             background: linear-gradient(145deg, #111, #0a0a0a);
-            border: 1px solid #222; border-radius: 10px;
-            padding: 25px; display: flex; flex-direction: column; gap: 12px;
+            border: 1px solid #222; 
+            border-radius: 10px;
+            padding: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
             transition: transform 0.2s, border-color 0.2s;
+            position: relative; /* REQUIRED FOR THE WATERMARK */
+            overflow: hidden; /* Keeps the watermark inside the card */
+            z-index: 1;
         }
+
         .code-card:hover { transform: translateY(-4px); border-color: #415a77; }
+
+        /* --- THE CLINICAL WATERMARK --- */
+        .code-card::after {
+            content: "";
+            position: absolute;
+            bottom: -15px; /* Tucks it slightly off the bottom edge */
+            right: -15px; /* Tucks it slightly off the right edge */
+            width: 120px;
+            height: 120px;
+            background-image: url('logo/Azul.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.05; /* VERY FAINT - Just a ghost of a stamp */
+            z-index: -1; /* Keeps it behind the text */
+            pointer-events: none;
+        }
 
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .hcpcs-code { font-size: 1.8rem; font-weight: 900; color: #8bb4e5; font-family: monospace; letter-spacing: 2px; margin: 0; }
@@ -297,7 +321,10 @@
 
 <div id="chatbotWindow">
     <div id="chatHeader">
-        <span>Azul Clinical AI</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="logo/Azul.png" alt="Bot Icon" style="width: 20px; height: 20px; object-fit: contain;">
+            <span>Azul Clinical AI</span>
+        </div>
         <span style="cursor:pointer; color: #aaa;" onclick="toggleChat()">✖</span>
     </div>
     <div id="chatHistory">
