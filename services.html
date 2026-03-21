@@ -7,6 +7,11 @@
     <style>
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #030303; color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .filter-sidebar { width: 250px; background: #0f0f0f; border-right: 1px solid #272727; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        /* Universal Typography for Sidebar */
+        .brand-logo-text { color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+        .developer-tag { font-size: 0.8em; color: #aaaaaa; margin: 0; letter-spacing: 1px; }
+        .sidebar-link { color: #aaaaaa; text-decoration: none; font-weight: bold; font-size: 0.9em; transition: color 0.2s; display: inline-block; }
+        .sidebar-link:hover { color: #ffffff; }
         .catalog-container { flex: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; align-content: start; }
         
         /* Added a subtle hover state to indicate the cards are clickable! */
@@ -71,24 +76,35 @@
 <body>
 
     <aside class="filter-sidebar">
-        <a href="index.html" class="back-link">← BACK TO LANDING</a>
-        <h2 style="font-size: 1.2em; letter-spacing: 2px; margin: 0;">SERVICES</h2>
-        
-        <input type="text" placeholder="Search keywords..." id="serviceSearch" onkeyup="filterServices()">
-        
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+        <img src="logo/Azul.png" alt="Azul Sentinel" style="width: 45px; height: auto; filter: drop-shadow(0 0 8px rgba(65, 90, 119, 0.6));">
         <div>
-            <p style="font-size: 0.8em; color: #888; margin-bottom: 5px;">CATEGORY</p>
-            <select id="categoryFilter" onchange="filterServices()">
-                <option value="All">All Categories</option>
-                <option value="Data Analytics">Data Analytics</option>
-                <option value="Data Collection">Data Collection</option>
-                <option value="Data Engineering">Data Engineering</option>
-                <option value="AI Development">AI Development</option>
-                <option value="Automation">Automation</option>
-                <option value="Web Design">Web Design</option>
-            </select>
+            <h2 class="brand-logo-text" style="margin: 0; font-size: 1.1rem;">RAY AZUL PEREZ</h2>
+            <p class="developer-tag" style="margin: 2px 0 0 0; font-size: 0.7rem;">Services & Automation</p>
         </div>
-    </aside>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: -10px; margin-bottom: 15px;">
+        <a href="index.html" class="sidebar-link" style="color: #415a77;">Back to Landing →</a>
+        <a href="https://github.com/rayazulseven-max" class="sidebar-link" target="_blank">View GitHub Profile ↗</a>
+        <a href="https://www.linkedin.com/in/ray-azul-dev/" class="sidebar-link" target="_blank">View LinkedIn Profile ↗</a>
+    </div>
+
+    <input type="text" placeholder="Search keywords..." id="serviceSearch" onkeyup="filterServices()">
+    
+    <div>
+        <p style="font-size: 0.8em; color: #888; margin-bottom: 5px;">CATEGORY</p>
+        <select id="categoryFilter" onchange="filterServices()">
+            <option value="All">All Categories</option>
+            <option value="Data Analytics">Data Analytics</option>
+            <option value="Data Collection">Data Collection</option>
+            <option value="Data Engineering">Data Engineering</option>
+            <option value="AI Development">AI Development</option>
+            <option value="Automation">Automation</option>
+            <option value="Web Design">Web Design</option>
+        </select>
+    </div>
+</aside>
 
     <main class="catalog-container" id="serviceGrid"></main>
 
