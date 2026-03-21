@@ -13,24 +13,21 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            justify-content: flex-start; /* FIX: Changed from center */
-            padding-top: 8vh; /* FIX: Keeps it looking centered on load */
-            padding-bottom: 100px; /* FIX: Room for the scroll button */
+            justify-content: flex-start;
+            padding-top: 8vh;
+            padding-bottom: 100px;
             min-height: 100vh; 
             overflow-x: hidden;
             -webkit-user-select: none;
             user-select: none;
         }
         
-        /* 5. Resume & Contact Modals */
         .modal-overlay {
             display: none; 
             position: fixed; 
             z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
             background-color: rgba(0, 0, 0, 0.8); 
             backdrop-filter: blur(5px);
             justify-content: center;
@@ -39,13 +36,16 @@
             transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.show { display: flex; opacity: 1; }
 
         .modal-content {
             background: linear-gradient(145deg, #0f0f0f, #151515);
+            /* THE BLUEPRINT WATERMARK */
+            background-image: linear-gradient(rgba(15, 15, 15, 0.9), rgba(15, 15, 15, 0.9)), url('logo/Azul.png');
+            background-size: 180px;
+            background-position: calc(100% + 20px) calc(100% + 20px);
+            background-repeat: no-repeat;
+            background-blend-mode: overlay;
             border: 1px solid #333;
             border-radius: 12px;
             padding: 40px;
@@ -56,42 +56,15 @@
             transition: transform 0.3s ease;
             box-shadow: 0 15px 40px rgba(0,0,0,0.7);
             box-sizing: border-box;
-            max-height: 85vh; /* Prevents it from being taller than the phone screen */
-            overflow-y: auto; /* Creates a scrollbar inside the modal if needed */
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
-
-        .modal-overlay.show .modal-content {
-            transform: translateY(0);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            color: #888;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-            color: #fff;
-        }
-
-        .modal-section {
-            margin-bottom: 25px;
-            text-align: left;
-        }
-
-        .modal-section h3 {
-            color: #415a77;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 5px;
-        }
+        .modal-overlay.show .modal-content { transform: translateY(0); }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #888; font-size: 28px; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover { color: #fff; }
+        .modal-section { margin-bottom: 25px; text-align: left; }
+        .modal-section h3 { color: #415a77; font-size: 1.1rem; margin-bottom: 10px; border-bottom: 1px solid #222; padding-bottom: 5px; }
 
         .contact-btn {
             display: inline-block;
@@ -112,179 +85,35 @@
             font-family: inherit;
         }
 
-        .contact-btn:hover {
-            background-color: #5a7b9e;
-        }
-
-        /* 1. Hero Section */
-        .hero {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 0 20px;
-            animation: fadeIn 1s ease-out;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            margin: 0 0 10px 0;
-            text-transform: uppercase;
-        }
-        .hero h2 {
-            font-size: 1.2rem;
-            color: #415a77;
-            font-weight: 600;
-            margin: 0 0 20px 0;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .mission-statement {
-            color: #aaaaaa;
-            font-size: 1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
+        .hero { text-align: center; margin-bottom: 50px; padding: 0 20px; animation: fadeIn 1s ease-out; }
+        .hero h1 { font-size: 3rem; font-weight: 900; letter-spacing: 4px; margin: 0 0 10px 0; text-transform: uppercase; }
+        .hero h2 { font-size: 1.2rem; color: #415a77; font-weight: 600; margin: 0 0 20px 0; letter-spacing: 2px; text-transform: uppercase; }
+        .mission-statement { color: #aaaaaa; font-size: 1rem; max-width: 600px; margin: 0 auto; line-height: 1.6; }
         
-        /* 1.5 Certifications Grid */
-        .certifications-container {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 35px;
-            flex-wrap: wrap;
-            animation: slideUp 1.2s ease-out;
-        }
+        .certifications-container { display: flex; justify-content: center; gap: 25px; margin-top: 35px; flex-wrap: wrap; }
+        .cert-badge-wrapper { background: #111; border: 1px solid #333; border-radius: 12px; padding: 15px 15px 5px 15px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
+        .cert-badge-wrapper:hover { border-color: #415a77; transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
 
-        .cert-badge-wrapper {
-            background: #111; 
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px 15px 5px 15px; 
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .suite-grid { display: flex; gap: 30px; max-width: 1200px; padding: 0 20px; margin-bottom: 60px; animation: slideUp 1s ease-out; }
+        .project-card { background: linear-gradient(145deg, #0f0f0f, #1a1a1a); border: 1px solid #272727; border-radius: 12px; flex: 1; padding: 40px 30px; text-align: left; text-decoration: none; color: white; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .project-card:hover { transform: translateY(-8px); border-color: #415a77; background: linear-gradient(145deg, #121921, #1a222c); }
+        .project-card h3 { font-size: 1.5rem; margin: 0 0 15px 0; }
+        .project-card p { color: #888; font-size: 0.95rem; line-height: 1.5; margin: 0; }
+        .card-icon { font-size: 2rem; margin-bottom: 20px; color: #415a77; }
 
-        .cert-badge-wrapper:hover {
-            border-color: #415a77;
-            background: #1a1a1a;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        }
+        .tech-stack { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 800px; margin-bottom: 50px; padding: 0 20px; }
+        .tech-pill { background: #111; border: 1px solid #333; color: #888; padding: 8px 16px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; transition: 0.2s; }
+        .tech-pill:hover { color: #fff; border-color: #415a77; }
 
-        /* 2. The Suite (Project Grid) */
-        .suite-grid {
-            display: flex;
-            gap: 30px;
-            max-width: 1200px; /* Increased to fit 3 cards perfectly */
-            padding: 0 20px;
-            margin-bottom: 60px;
-            animation: slideUp 1s ease-out;
-        }
-        
-        .project-card {
-            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-            border: 1px solid #272727;
-            border-radius: 12px;
-            flex: 1;
-            padding: 40px 30px;
-            text-align: left;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-8px);
-            border-color: #415a77;
-            background: linear-gradient(145deg, #121921, #1a222c);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .project-card h3 {
-            font-size: 1.5rem;
-            margin: 0 0 15px 0;
-        }
-        
-        .project-card p {
-            color: #888;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin: 0;
-        }
+        .social-links { display: flex; gap: 30px; margin-bottom: 40px; }
+        .social-links a { color: #888; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: color 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .social-links a:hover { color: #ffffff; }
 
-        .card-icon {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #415a77;
-        }
-
-        /* 3. Tech Stack Pills */
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            max-width: 800px;
-            margin-bottom: 50px;
-            padding: 0 20px;
-        }
-        .tech-pill {
-            background: #111;
-            border: 1px solid #333;
-            color: #888;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.2s;
-        }
-        .tech-pill:hover {
-            color: #fff;
-            border-color: #415a77;
-            background: #1a1a1a;
-        }
-
-        /* 4. Footer Links */
-        .social-links {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-        .social-links a {
-            color: #888;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .social-links a:hover {
-            color: #ffffff;
-        }
-
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .suite-grid { flex-direction: column; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero h2 { font-size: 1rem; }
-        }
-        /* 6. Scroll to Top Button - Nuclear Fix */
         #scrollTopBtn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 99999; /* Maxed out to stay above everything */
+            z-index: 99999;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -303,35 +132,31 @@
             box-shadow: 0 0 15px rgba(65, 90, 119, 0.4);
         }
 
-        /* !important forces the browser to obey */
         #scrollTopBtn.visible {
             opacity: 1 !important;
             visibility: visible !important;
             transform: translateY(0) !important;
         }
 
-        #scrollTopBtn:hover {
-            background: #415a77;
-            transform: translateY(-5px) !important;
-            box-shadow: 0 0 25px rgba(65, 90, 119, 0.8);
+        #scrollTopBtn:hover { background: #415a77; transform: translateY(-5px) !important; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .suite-grid { flex-direction: column; }
+            .hero h1 { font-size: 2.2rem; }
         }
-        .modal-content {
-    /* ... keep your other settings ... */
-    background-image: linear-gradient(rgba(15, 15, 15, 0.85), rgba(21, 21, 21, 0.85)), 
-                      url('logo/Azul.png');
-    background-size: 180px; /* Slightly smaller for better padding */
-    background-position: calc(100% + 20px) calc(100% + 20px); /* Tucks it into the corner */
-    background-repeat: no-repeat;
-    background-blend-mode: overlay; /* This makes it look like a watermark */
-}
     </style>
 </head>
 <body>
+
 <div style="margin-bottom: 30px; animation: fadeIn 1.5s ease-out;">
     <img src="logo/Azul.png" alt="The Prismatic Sentinel" 
          style="width: 140px; height: auto; border-radius: 10px; 
                 filter: drop-shadow(0 0 20px rgba(65, 90, 119, 0.4));">
 </div>
+
     <header class="hero">
         <h1>Ray Azul Perez</h1>
         <h2>AI Developer • Data Analyst • UI Engineer</h2>
@@ -349,21 +174,17 @@
             </div>
             <div class="cert-badge-wrapper">
                 <a href="https://www.coursera.org/account/accomplishments/professional-cert/JPANEI0SBYA6" target="_blank" style="text-decoration: none;">
-                    <div style="width: 150px; height: 270px; background: #111; border: 1px solid #ffffff; display: flex; flex-direction: column; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                        
+                    <div style="width: 150px; height: 270px; background: #111; border: 1px solid #ffffff; display: flex; flex-direction: column; box-sizing: border-box;">
                         <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px;">
                             <img src="logo/aapc-cert.png" alt="AAPC Medical Biller" style="max-width: 100%; max-height: 100px; object-fit: contain;">
-                            
                             <div style="margin-top: 15px; text-align: center; width: 100%;">
-                                <div style="color: #6a6a6a; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">AAPC Medical Biller</div>
-                                <div style="color: #555; font-size: 0.75rem; font-style: italic; margin-top: 4px;">Issuer: Coursera</div>
+                                <div style="color: #6a6a6a; font-size: 0.85rem;">AAPC Medical Biller</div>
+                                <div style="color: #555; font-size: 0.75rem; font-style: italic;">Issuer: Coursera</div>
                             </div>
                         </div>
-                        
                         <div style="height: 38px; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-                            <span style="font-size: 0.6rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px;">Provided by <span style="color: #333; font-weight: bold; font-style: italic;">Coursera</span></span>
+                            <span style="font-size: 0.6rem; color: #888; text-transform: uppercase;">Provided by <span style="color: #333; font-weight: bold;">Coursera</span></span>
                         </div>
-                        
                     </div>
                 </a>
             </div>
@@ -398,172 +219,43 @@
         <div class="tech-pill">UI/UX DESIGN</div>
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
+
     <footer class="social-links" style="justify-content: center; margin-bottom: 20px; width: 100%; max-width: 1200px;">
-        <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
-        <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
-        <a href="#" id="openModalBtn">Resume / About ↗</a>
-    </footer>
+        <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
+        <a href="#" id="openModalBtn">Resume / About ↗</a>
+    </footer>
 
     <div id="case-study-trigger" style="text-align: center; padding: 20px 0 60px 0; cursor: pointer; width: 100%;">
-        <span style="font-size: 0.7rem; letter-spacing: 3px; color: #415a77; text-transform: uppercase; transition: color 0.3s;">
+        <span style="font-size: 0.7rem; letter-spacing: 3px; color: #415a77; text-transform: uppercase;">
             [ Explore Deep Dives & Validation ]
         </span>
         <div style="width: 50px; height: 1px; background: #415a77; margin: 15px auto;"></div>
     </div>
 
     <div id="case-study-content" style="max-height: 0; overflow: hidden; transition: max-height 1.5s ease-in-out, opacity 1s ease-in-out; opacity: 0; display: flex; flex-direction: column; align-items: center; width: 100%;">
-
-    <section style="padding: 100px 20px; max-width: 1200px; width: 100%; animation: fadeIn 1.5s ease-out;">
-        <div style="background: linear-gradient(165deg, #0d1117, #010409); border: 1px solid #30363d; border-radius: 20px; padding: 60px; display: flex; flex-wrap: wrap; gap: 50px; align-items: center;">
-            
-            <div style="flex: 1; min-width: 300px; text-align: center;">
-                <div style="display: inline-block; padding: 20px; background: #161b22; border-radius: 15px; border: 1px solid #415a77; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
-                    <img src="logo/221SP_Logo_Large_Logo_Only_w_Glow.png" alt="221st Street Publishing" style="max-width: 200px; height: auto; filter: drop-shadow(0 0 10px rgba(65, 90, 119, 0.3));">
-                    <div style="margin-top: 20px; color: #415a77; font-weight: bold; letter-spacing: 2px; font-size: 0.7rem; text-transform: uppercase;">Enterprise Case Study</div>
+        <section style="padding: 100px 20px; max-width: 1200px; width: 100%;">
+            <div style="background: linear-gradient(165deg, #0d1117, #010409); border: 1px solid #30363d; border-radius: 20px; padding: 60px; display: flex; flex-wrap: wrap; gap: 50px; align-items: center;">
+                <div style="flex: 1; min-width: 300px; text-align: center;">
+                    <img src="logo/221SP_Logo_Large_Logo_Only_w_Glow.png" alt="221st Street Publishing" style="max-width: 200px;">
+                </div>
+                <div style="flex: 1.5; min-width: 300px; text-align: left;">
+                    <h2>The Digital Publishing Pivot</h2>
+                    <p>When Kenny Mock expanded his studio into a publishing house, he needed a central intelligence hub for his catalog.</p>
                 </div>
             </div>
-
-            <div style="flex: 1.5; min-width: 300px; text-align: left;">
-                <h2 style="font-size: 2rem; color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">The Digital Publishing Pivot</h2>
-                
-                <p style="color: #888; line-height: 1.8; font-size: 1.1rem; margin-bottom: 30px;">
-                    When <span style="color: #fff;">Kenny Mock</span> looked to expand his studio presence into a full-scale publishing house, he needed more than a website—he needed a central intelligence hub for his catalog.
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
-                    <div>
-                        <h4 style="color: #5a7b9e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">The Challenge</h4>
-                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin: 0;">Managing hundreds of unique compositions and songwriters while maintaining a professional presentation for global industry leaders.</p>
-                    </div>
-                    <div>
-                        <h4 style="color: #5a7b9e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">The Solution</h4>
-                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin: 0;">A custom <span style="color: #fff;">JSON-driven catalog architecture</span> featuring algorithmic filtering and sequential audio playback logic.</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #222;">
-                    <p style="color: #415a77; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; margin: 0;">IMPACT: Business Transformation</p>
-                    <p style="color: #888; font-size: 0.95rem; margin-top: 10px; line-height: 1.6;">
-                        Enabled immediate songwriter acquisition and professionalized the "221st Street Publishing" brand, resulting in a system the founder describes as "the key" to their future growth.
-                    </p>
-                </div>
-            </div>
-
+        </section>
         </div>
-    </section>
-    <section style="padding: 100px 20px; max-width: 1200px; width: 100%; animation: fadeIn 1.7s ease-out;">
-        <div style="background: linear-gradient(165deg, #010409, #0d1117); border: 1px solid #30363d; border-radius: 20px; padding: 60px; display: flex; flex-wrap: wrap-reverse; gap: 50px; align-items: center;">
-            
-            <div style="flex: 1.5; min-width: 300px; text-align: left;">
-                <h2 style="font-size: 2rem; color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px;">Clinical-Grade Data Integrity</h2>
-                
-                <p style="color: #888; line-height: 1.8; font-size: 1.1rem; margin-bottom: 30px;">
-                    In medical billing, an AI hallucination isn't just an error—it's a denied claim. I engineered a <span style="color: #fff;">Retrieval-Augmented Generation (RAG)</span> system grounded in professional medical coding standards.
-                </p>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px;">
-                    <div>
-                        <h4 style="color: #5a7b9e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">The Challenge</h4>
-                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin: 0;">Generic LLMs often fail to distinguish between similar HCPCS Level II codes, leading to inaccurate medical supply mapping.</p>
-                    </div>
-                    <div>
-                        <h4 style="color: #5a7b9e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">The Solution</h4>
-                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin: 0;">A <span style="color: #fff;">Weighted Semantic Search</span> engine with 80% confidence thresholds and regex interceptors for zero-latency code lookups.</p>
-                    </div>
-                </div>
-
-                <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #222;">
-                    <p style="color: #415a77; font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; margin: 0;">DOMAINE EXPERTISE: AAPC CERTIFIED</p>
-                    <p style="color: #888; font-size: 0.95rem; margin-top: 10px; line-height: 1.6;">
-                        Leveraging my AAPC Professional Medical Billing background, I implemented strict data validation rules that prevent the engine from guessing when clinical data is ambiguous or unavailable.
-                    </p>
-                </div>
-            </div>
-
-            <div style="flex: 1; min-width: 300px; text-align: center;">
-                <div style="display: inline-block; padding: 20px; background: #161b22; border-radius: 15px; border: 1px solid #415a77; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
-                    <div style="font-size: 3.5rem; color: #415a77; margin-bottom: 10px;">⚕️</div>
-                    <div style="color: #fff; font-weight: bold; font-size: 1.2rem; letter-spacing: 1px;">HCPCS Engine</div>
-                    <div style="margin-top: 10px; color: #415a77; font-weight: bold; letter-spacing: 2px; font-size: 0.7rem; text-transform: uppercase;">AAPC Grounded RAG</div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-
-    <section style="padding: 80px 20px; max-width: 1200px; width: 100%; text-align: center; animation: slideUp 1.4s ease-out;">
-        <h2 style="font-size: 1.5rem; letter-spacing: 3px; text-transform: uppercase; color: #415a77; margin-bottom: 40px;">System Validation</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-            
-            <div style="background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; padding: 40px; border-radius: 12px; text-align: left; position: relative; overflow: hidden;">
-                <div style="font-size: 3rem; color: #415a77; opacity: 0.2; position: absolute; top: 10px; left: 10px; font-family: serif;">"</div>
-                <p style="color: #888; font-size: 1rem; line-height: 1.7; font-style: italic; position: relative; z-index: 1;">
-                    Vic, I'm honored and grateful that you would even loan your talents to my project! I'm floored by what you're able to do with JSON... You offer quality and are a joy to work with!
-                </p>
-                <div style="margin-top: 25px; display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 40px; height: 1px; background: #415a77;"></div>
-                    <div>
-                        <p style="margin: 0; font-weight: bold; color: #fff; font-size: 0.9rem; letter-spacing: 1px;">KENNY MOCK</p>
-                        <p style="margin: 2px 0 0 0; color: #5a7b9e; font-size: 0.75rem; text-transform: uppercase;">Founder, 221st Street Publishing</p>
-                    </div>
-                </div>
-            </div>
-
-            <div style="background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; padding: 40px; border-radius: 12px; text-align: left; position: relative; overflow: hidden;">
-                <div style="font-size: 3rem; color: #415a77; opacity: 0.2; position: absolute; top: 10px; left: 10px; font-family: serif;">"</div>
-                <p style="color: #888; font-size: 1rem; line-height: 1.7; font-style: italic; position: relative; z-index: 1;">
-                    I showed the catalog to a songwriter today and she said, 'That is SOOOO cool!!!' She knew I have the studio, but didn't know I am in publishing now too. This catalog is the key.
-                </p>
-                <div style="margin-top: 25px; display: flex; align-items: center; gap: 15px;">
-                    <div style="width: 40px; height: 1px; background: #415a77;"></div>
-                    <div>
-                        <p style="margin: 0; font-weight: bold; color: #fff; font-size: 0.9rem; letter-spacing: 1px;">INDUSTRY FEEDBACK</p>
-                        <p style="margin: 2px 0 0 0; color: #5a7b9e; font-size: 0.75rem; text-transform: uppercase;">Independent Songwriter / Artist</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-   </div>
 
     <div id="resumeModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" id="closeModalBtn">&times;</span>
-            
-            <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase; letter-spacing: 2px;">The Blueprint</h2>
-            
+            <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase;">The Blueprint</h2>
             <div class="modal-section">
                 <h3>Education</h3>
                 <p><strong>Western Governors University (WGU)</strong></p>
-                <p style="color: #888; font-size: 0.9rem; margin-top: 5px;">Bachelor of Science — Data Analytics</p>
+                <p style="color: #888; font-size: 0.9rem;">Bachelor of Science — Data Analytics</p>
             </div>
-
-            <div class="modal-section">
-                <h3>Verified Credentials</h3>
-                <ul style="color: #888; font-size: 0.95rem; line-height: 1.6; padding-left: 20px;">
-                    <li><strong style="color: #fff;">IBM:</strong> Artificial Intelligence Engineering Professional Certificate</li>
-                    <li><strong style="color: #fff;">Google:</strong> Advanced Data Analytics & Vertex AI Implementation</li>
-                    <li><strong style="color: #fff;">Google:</strong> IT Support Professional Certificate</li>
-                    <li>
-                        <strong style="color: #fff;">AAPC:</strong> Professional Medical Coding Certification
-                        <span style="display: block; font-size: 0.85rem; color: #5a7b9e; margin-top: 2px;">
-                            Specializing in bridging medical data taxonomies with Vertex AI RAG pipelines.
-                        </span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="modal-section">
-                <h3>Core Arsenal</h3>
-                <p style="color: #888; font-size: 0.95rem; line-height: 1.6;">
-                    Python • SQL • OSINT Data Harvesting • RAG Architecture • Generative AI Tooling • Data Visualization • UI/UX Engineering
-                </p>
-            </div>
-            
             <button class="contact-btn" onclick="openContactModal()">Initiate Contact</button>
         </div>
     </div>
@@ -571,128 +263,69 @@
     <div id="contactModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" onclick="closeContactModal()">&times;</span>
-            <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase; letter-spacing: 2px;">Inquiry</h2>
-            <p style="color: #888; font-size: 0.85em; margin-bottom: 20px;">Send a message directly to Ray's workspace.</p>
+            <h2>Inquiry</h2>
             <div style="background: #111; border: 1px solid #333; padding: 12px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-                <span id="emailText" style="color: #fff; font-size: 0.9rem; letter-spacing: 1px;">rayazulseven@gmail.com</span>
-                <button id="copyEmailBtn" style="background: transparent; border: 1px solid #415a77; color: #415a77; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: all 0.2s;">Copy</button>
-            </div>
-            
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div style="flex: 1; height: 1px; background: #333;"></div>
-                <span style="color: #555; font-size: 0.8rem; padding: 0 10px; text-transform: uppercase;">Or send direct</span>
-                <div style="flex: 1; height: 1px; background: #333;"></div>
+                <span id="emailText" style="color: #fff; font-size: 0.9rem;">rayazulseven@gmail.com</span>
+                <button id="copyEmailBtn" style="background: transparent; border: 1px solid #415a77; color: #415a77; padding: 5px 10px; cursor: pointer;">Copy</button>
             </div>
             <form action="https://formspree.io/f/xvzwbvwv" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
-                <input type="text" name="name" placeholder="Name" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
-                <input type="email" name="email" placeholder="Email" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
-                <textarea name="message" placeholder="Project Details" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; min-height: 100px; outline: none; font-family: inherit; resize: vertical;"></textarea>
+                <input type="text" name="name" placeholder="Name" required style="background: #111; border: 1px solid #333; color: white; padding: 12px;">
+                <input type="email" name="email" placeholder="Email" required style="background: #111; border: 1px solid #333; color: white; padding: 12px;">
+                <textarea name="message" placeholder="Project Details" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; min-height: 100px;"></textarea>
                 <button type="submit" class="contact-btn">Send Message</button>
             </form>
         </div>
     </div>
-<button id="scrollTopBtn" title="Return to Top">↑</button>
+
+    <button id="scrollTopBtn" title="Return to Top">↑</button>
+
     <script>
         // Copy Email Logic
         const copyBtn = document.getElementById('copyEmailBtn');
         const emailText = document.getElementById('emailText').innerText;
-
         copyBtn.addEventListener('click', (e) => {
             e.preventDefault();
             navigator.clipboard.writeText(emailText).then(() => {
                 copyBtn.innerText = "Copied!";
-                copyBtn.style.backgroundColor = "#415a77";
-                copyBtn.style.color = "#fff";
-                
-                setTimeout(() => {
-                    copyBtn.innerText = "Copy";
-                    copyBtn.style.backgroundColor = "transparent";
-                    copyBtn.style.color = "#415a77";
-                }, 2000);
+                setTimeout(() => { copyBtn.innerText = "Copy"; }, 2000);
             });
         });
-        // IP Protection
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        
-        // Modal Logic Elements
+
+        // Modal Logic
         const resumeModal = document.getElementById("resumeModal");
         const contactModal = document.getElementById("contactModal");
         const openBtn = document.getElementById("openModalBtn");
-        const closeBtn = document.getElementById("closeModalBtn");
+        const closeModalBtn = document.getElementById("closeModalBtn");
 
-        // Open Resume
-        openBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            resumeModal.classList.add("show");
-        });
+        openBtn.addEventListener("click", (e) => { e.preventDefault(); resumeModal.classList.add("show"); });
+        closeModalBtn.addEventListener("click", () => resumeModal.classList.remove("show"));
+        function openContactModal() { resumeModal.classList.remove("show"); contactModal.classList.add("show"); }
+        function closeContactModal() { contactModal.classList.remove("show"); }
+        window.addEventListener("click", (e) => { if (e.target === resumeModal) resumeModal.classList.remove("show"); if (e.target === contactModal) contactModal.classList.remove("show"); });
 
-        // Close Resume
-        closeBtn.addEventListener("click", () => {
-            resumeModal.classList.remove("show");
-        });
-
-        // Open Contact Form (and close Resume)
-        function openContactModal() {
-            resumeModal.classList.remove("show");
-            contactModal.classList.add("show");
-        }
-
-        // Close Contact Form
-        function closeContactModal() {
-            contactModal.classList.remove("show");
-        }
-
-        // Close if user clicks outside either modal box
-        window.addEventListener("click", (e) => {
-            if (e.target === resumeModal) {
-                resumeModal.classList.remove("show");
-            }
-            if (e.target === contactModal) {
-                contactModal.classList.remove("show");
-            }
-        });
-        // --- System Logic: Observer & Scroll ---
+        // System Logic: Observer & Scroll
         const trigger = document.getElementById('case-study-trigger');
         const content = document.getElementById('case-study-content');
         const scrollTopBtn = document.getElementById("scrollTopBtn");
         let triggerTimer;
 
-        // 1. Case Study Expansion
-        const expandSection = () => {
-            content.style.maxHeight = "10000px"; 
-            content.style.opacity = "1";
-            trigger.style.display = "none";
-        };
-
-        trigger.addEventListener('click', expandSection);
-
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                triggerTimer = setTimeout(expandSection, 800);
-            } else {
-                clearTimeout(triggerTimer);
-            }
-        }, { threshold: 1.0 }); 
-
+                triggerTimer = setTimeout(() => {
+                    content.style.maxHeight = "10000px"; 
+                    content.style.opacity = "1";
+                    trigger.style.display = "none";
+                }, 800);
+            } else { clearTimeout(triggerTimer); }
+        }, { threshold: 1.0 });
         observer.observe(trigger);
 
-        // 2. Scroll to Top Logic
         window.addEventListener('scroll', () => {
-            const y = window.scrollY || document.documentElement.scrollTop;
-            
-            if (y > 400) {
-                scrollTopBtn.classList.add("visible");
-            } else {
-                scrollTopBtn.classList.remove("visible");
-            }
+            if (window.scrollY > 400) scrollTopBtn.classList.add("visible");
+            else scrollTopBtn.classList.remove("visible");
         });
-
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        scrollTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     </script>
-    
-    <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
-    
+    <script async src="//cdn.credly.com/assets/utilities/embed.js"></script>
 </body>
 </html>
