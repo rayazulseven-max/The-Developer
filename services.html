@@ -374,6 +374,20 @@
     }
     // IP PROTECTION: Disable Right-Click
     document.addEventListener('contextmenu', event => event.preventDefault());
+        /* --- IP PROTECTION: Disable Text Selection & Mobile Long-Press --- */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard */
+            -webkit-touch-callout: none; /* iOS Safari Long Press */
+        }
+
+        /* CRITICAL: Re-enable selection for typing in forms and chat */
+        input, textarea, select {
+            -webkit-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
 
 </script>
 </body>
