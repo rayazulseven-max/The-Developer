@@ -559,7 +559,16 @@
             <span class="close-btn" onclick="closeContactModal()">&times;</span>
             <h2 style="margin-top: 0; color: #e0e1dd; text-transform: uppercase; letter-spacing: 2px;">Inquiry</h2>
             <p style="color: #888; font-size: 0.85em; margin-bottom: 20px;">Send a message directly to Ray's workspace.</p>
+            <div style="background: #111; border: 1px solid #333; padding: 12px; border-radius: 6px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <span id="emailText" style="color: #fff; font-size: 0.9rem; letter-spacing: 1px;">rayazulseven@gmail.com</span>
+                <button id="copyEmailBtn" style="background: transparent; border: 1px solid #415a77; color: #415a77; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold; transition: all 0.2s;">Copy</button>
+            </div>
             
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="flex: 1; height: 1px; background: #333;"></div>
+                <span style="color: #555; font-size: 0.8rem; padding: 0 10px; text-transform: uppercase;">Or send direct</span>
+                <div style="flex: 1; height: 1px; background: #333;"></div>
+            </div>
             <form action="https://formspree.io/f/xvzwbvwv" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
                 <input type="text" name="name" placeholder="Name" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
                 <input type="email" name="email" placeholder="Email" required style="background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; font-family: inherit;">
@@ -570,6 +579,24 @@
     </div>
 <button id="scrollTopBtn" title="Return to Top">↑</button>
     <script>
+        // Copy Email Logic
+        const copyBtn = document.getElementById('copyEmailBtn');
+        const emailText = document.getElementById('emailText').innerText;
+
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(emailText).then(() => {
+                copyBtn.innerText = "Copied!";
+                copyBtn.style.backgroundColor = "#415a77";
+                copyBtn.style.color = "#fff";
+                
+                setTimeout(() => {
+                    copyBtn.innerText = "Copy";
+                    copyBtn.style.backgroundColor = "transparent";
+                    copyBtn.style.color = "#415a77";
+                }, 2000);
+            });
+        });
         // IP Protection
         document.addEventListener('contextmenu', event => event.preventDefault());
         
