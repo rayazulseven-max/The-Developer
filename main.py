@@ -1,3 +1,5 @@
+import google.generativeai as genai
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from rapidfuzz import process, fuzz
@@ -34,15 +36,17 @@ for item in hcpcs_db:
     hcpcs_search_dict[item['code']] = weighted_text
 
 
+# Configure the API Key (You will set this in Render's Environment Variables)
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+
 # ==========================================
-# 🧠 NEW: THE RAG GENERATOR FUNCTION
+# 🧠 THE RAG GENERATOR FUNCTION (GEMINI POWERED)
 # ==========================================
 async def generate_rag_response(user_query: str, retrieved_service: dict = None):
     """
-    This function takes the data RapidFuzz found and feeds it to an LLM.
+    Takes the data RapidFuzz found and feeds it to Gemini to generate a response.
     """
     if retrieved_service:
-        # We found a match in the JSON! Format it as facts for the AI.
         context = f"""
         SERVICE FOUND IN DATABASE:
         Name: {retrieved_service['name']}
@@ -51,7 +55,6 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None)
         Details: {retrieved_service['description']}
         """
     else:
-        # No match found. Tell the AI to handle it gracefully.
         context = "No specific service found in the database for this query."
 
     system_prompt = f"""
@@ -66,13 +69,17 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None)
     2. Be concise, clinical, and helpful. 
     3. Format the service name in bold HTML tags (e.g., <strong>Name</strong>).
     4. If no service was found in the database, politely suggest they fill out the Contact Form for a custom quote.
+    5. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
     """
     
-    # ⚠️ PLACEHOLDER: This is where we will call the OpenAI or Gemini API!
-    # mock_response = await call_llm_api(system_prompt)
-    
-    # For right now, we will just return what the AI *would* see, so you can test the plumbing.
-    return "<strong>[LLM WILL GENERATE RESPONSE HERE BASED ON:]</strong><br><br>" + context.replace('\n', '<br>')
+    try:
+        # Using the fast flash model for quick chatbot responses
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(system_prompt)
+        return response.text
+    except Exception as e:
+        print(f"Gemini API Error: {e}")
+        return "System offline. Please contact Ray directly via the Contact Form."
 
 
 # 3. The Dual-Routing Endpoint
