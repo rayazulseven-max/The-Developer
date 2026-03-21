@@ -74,6 +74,21 @@
             z-index: -1; /* Sits behind text but stays solid */
             pointer-events: none;
         }
+        /* --- FONT COLOR FIX: Blueprint Gray --- */
+        .modal-content,
+        .modal-content p, 
+        .modal-content ul, 
+        .modal-content li, 
+        .modal-content strong,
+        .modal-content span {
+            color: #a0a0a0 !important; /* Forces soft gray text for readability */
+        }
+
+        /* Keep headers bright white for structural hierarchy */
+        .modal-content h2, 
+        .modal-content h3 { 
+            color: #ffffff !important; 
+        }
 
 
         .modal-overlay.show .modal-content {
