@@ -13,7 +13,9 @@
             display: flex; 
             flex-direction: column;
             align-items: center; 
-            justify-content: center;
+            justify-content: flex-start; /* FIX: Changed from center */
+            padding-top: 8vh; /* FIX: Keeps it looking centered on load */
+            padding-bottom: 100px; /* FIX: Room for the scroll button */
             min-height: 100vh; 
             overflow-x: hidden;
             -webkit-user-select: none;
@@ -276,39 +278,41 @@
             .hero h1 { font-size: 2.2rem; }
             .hero h2 { font-size: 1rem; }
         }
-        /* 6. Scroll to Top Button - Fixed */
+        /* 6. Scroll to Top Button - Nuclear Fix */
         #scrollTopBtn {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 9999;
-            width: 45px;
-            height: 45px;
+            z-index: 99999; /* Maxed out to stay above everything */
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: #111;
-            border: 1px solid #415a77;
-            color: #415a77;
-            font-size: 1.2rem;
+            border: 2px solid #415a77;
+            color: #ffffff;
+            font-size: 1.5rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
-            visibility: hidden; /* Use visibility instead of display:none */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            visibility: hidden;
+            transform: translateY(20px);
+            box-shadow: 0 0 15px rgba(65, 90, 119, 0.4);
         }
 
+        /* !important forces the browser to obey */
         #scrollTopBtn.visible {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: translateY(0) !important;
         }
 
         #scrollTopBtn:hover {
             background: #415a77;
-            color: #fff;
-            transform: translateY(-5px);
+            transform: translateY(-5px) !important;
+            box-shadow: 0 0 25px rgba(65, 90, 119, 0.8);
         }
     </style>
 </head>
@@ -606,40 +610,41 @@
                 contactModal.classList.remove("show");
             }
         });
-        // --- Collapsible Case Studies Logic ---
+        // --- System Logic: Observer & Scroll ---
         const trigger = document.getElementById('case-study-trigger');
         const content = document.getElementById('case-study-content');
         const scrollTopBtn = document.getElementById("scrollTopBtn");
-        let scrollTimeout;
+        let triggerTimer;
 
+        // 1. Case Study Expansion
         const expandSection = () => {
-            content.style.maxHeight = "5000px"; 
+            content.style.maxHeight = "10000px"; 
             content.style.opacity = "1";
-            trigger.style.display = "none"; 
+            trigger.style.display = "none";
         };
 
         trigger.addEventListener('click', expandSection);
 
-        // Fixed Observer: Threshold lowered to 0.2 to ensure it fires
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
-                scrollTimeout = setTimeout(expandSection, 800);
+                triggerTimer = setTimeout(expandSection, 800);
             } else {
-                clearTimeout(scrollTimeout);
+                clearTimeout(triggerTimer);
             }
-        }, { threshold: 0.2 }); 
+        }, { threshold: 0.1 }); // Ultra-low threshold ensures it fires
 
         observer.observe(trigger);
 
-        // --- Scroll to Top Logic ---
-        window.onscroll = function() {
-            // Check scroll position across all browsers
-            if (window.pageYOffset > 400 || document.documentElement.scrollTop > 400) {
+        // 2. Scroll to Top Logic
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            
+            if (y > 400) {
                 scrollTopBtn.classList.add("visible");
             } else {
                 scrollTopBtn.classList.remove("visible");
             }
-        };
+        });
 
         scrollTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
