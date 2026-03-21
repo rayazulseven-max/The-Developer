@@ -134,10 +134,12 @@ async def chat_bot(query: str, context: str = "portfolio"):
                     rag_reply = await generate_rag_response(query, service)
                     return {"response": rag_reply, "match": True}
 
-        # B2. RapidFuzz Search
-        best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.token_set_ratio)
+        # B2. UPDATED RapidFuzz Search
+        # partial_token_set_ratio is perfect for finding keywords inside conversational sentences
+        best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.partial_token_set_ratio)
         
-        if best_match and best_match[1] > 60:
+        # Lowered threshold to 50 to catch a wider net of conversational queries
+        if best_match and best_match[1] > 50:
             matched_id = best_match[2] 
             for service in services_db:
                 if service['id'] == matched_id:
