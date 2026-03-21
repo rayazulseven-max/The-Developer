@@ -42,39 +42,51 @@
             z-index: -1; /* Behind the text */
             pointer-events: none;
         }
-        /* --- AUTO-SCROLLING TAG TICKER --- */
-        .tags-viewport {
-            margin-top: 15px;
+        /* --- VERTICAL AUTO-SCANNER --- */
+        .details-viewport {
+            height: 130px; /* Fixed height for the text area */
             overflow: hidden;
-            white-space: nowrap;
-            width: 100%;
             position: relative;
-            /* Creates a slick fade effect on the left and right edges */
-            -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+            margin-top: 10px;
+            /* Smooth fade effect at top and bottom */
+            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
         }
 
-        .tags-scroller {
-            display: inline-block;
-            white-space: nowrap;
-            /* 12s speed. Change this number to make it faster/slower */
-            animation: tickerScroll 12s linear infinite;
+        .details-scroller {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            animation: verticalScan 10s ease-in-out infinite;
         }
 
-        /* Pauses the scroll when the user hovers over the card */
-        .product-card:hover .tags-scroller {
+        /* Pauses the scan when you hover so people can read a specific part */
+        .product-card:hover .details-scroller {
             animation-play-state: paused;
+        }
+
+        @keyframes verticalScan {
+            0%, 20% { transform: translateY(0); } /* Pause at the top */
+            50%, 70% { transform: translateY(calc(-100% + 130px)); } /* Scroll to reveal the bottom */
+            90%, 100% { transform: translateY(0); } /* Smooth reset to top */
         }
 
         .tag-badge {
             background: #222; 
             padding: 4px 10px; 
             border-radius: 4px; 
-            margin-right: 8px; 
+            margin-right: 6px; 
             font-size: 0.75em; 
             color: #888;
             display: inline-block;
             border: 1px solid #333;
+            white-space: normal; /* Allow tags to wrap inside the scroller */
+        }
+
+        .product-card {
+            height: 300px; /* Lock all cards to the same height */
+            display: flex;
+            flex-direction: column;
         }
 
         @keyframes tickerScroll {
@@ -245,22 +257,18 @@
         grid.innerHTML = data.map(s => {
             const safeName = s.name.replace(/'/g, "\\'"); 
             
-            // 1. Generate the tags HTML using our new class
-            const tagHTML = s.tags.map(t => `<span class="tag-badge">${t}</span>`).join('');
-            
-            // 2. Duplicate the tags so the CSS scroll loops perfectly
-            const seamlessTags = tagHTML + tagHTML;
-
             return `
             <div class="product-card" onclick="openOrderModal('${safeName}')">
-                <div style="font-size: 0.7em; color: #888;">${s.category}</div>
-                <h3 style="margin: 5px 0;">${s.name}</h3>
+                <div style="font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 1px;">${s.category}</div>
+                <h3 style="margin: 5px 0; color: #fff;">${s.name}</h3>
                 <div class="product-price">$${s.price}</div>
-                <p style="font-size: 0.8em; color: #aaa;">${s.description}</p>
                 
-                <div class="tags-viewport">
-                    <div class="tags-scroller">
-                        ${seamlessTags}
+                <div class="details-viewport">
+                    <div class="details-scroller">
+                        <p style="font-size: 0.85em; color: #aaa; margin: 0; line-height: 1.6;">${s.description}</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            ${s.tags.map(t => `<span class="tag-badge">${t}</span>`).join('')}
+                        </div>
                     </div>
                 </div>
             </div>
