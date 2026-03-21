@@ -1,4 +1,3 @@
-import google.generativeai as genai
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,6 +5,9 @@ from rapidfuzz import process, fuzz
 import json
 import datetime
 import re  
+
+# 1. NEW SDK IMPORT
+from google import genai
 
 app = FastAPI()
 
@@ -16,14 +18,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 1. Load BOTH databases once on startup
+# Load BOTH databases once on startup
 with open('services.json', 'r') as f:
     services_db = json.load(f)
 
 with open('hcpcs.json', 'r') as f:
     hcpcs_db = json.load(f)
 
-# 2. Build Isolated Search Spaces
+# Build Isolated Search Spaces
 services_search_dict = {}
 for service in services_db:
     combined_text = f"{service['name']} {service['category']} {service['description']} {' '.join(service['tags'])}"
@@ -36,12 +38,9 @@ for item in hcpcs_db:
     hcpcs_search_dict[item['code']] = weighted_text
 
 
-# Configure the API Key (You will set this in Render's Environment Variables)
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+# 2. NEW SDK CLIENT INITIALIZATION
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-# ==========================================
-# 🧠 THE RAG GENERATOR FUNCTION (GEMINI POWERED)
-# ==========================================
 # ==========================================
 # 🧠 THE RAG GENERATOR FUNCTION (GEMINI POWERED)
 # ==========================================
@@ -73,13 +72,15 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None)
     """
     
     try:
-        # Using the fast flash model for quick chatbot responses
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(system_prompt)
+        # 3. NEW SDK GENERATION CALL
+        response = client.models.generate_content(
+            model='gemini-1.5-flash',
+            contents=system_prompt
+        )
         return response.text
     except Exception as e:
-        # THIS LINE IS THE FIX: It returns the actual error to the chat window
         return f"<strong>Gemini Error:</strong> {str(e)}"
+
 
 # 3. The Dual-Routing Endpoint
 @app.get("/chat")
@@ -133,11 +134,9 @@ async def chat_bot(query: str, context: str = "portfolio"):
                     rag_reply = await generate_rag_response(query, service)
                     return {"response": rag_reply, "match": True}
 
-        # B2. UPDATED RapidFuzz Search (More sensitive)
-        # Using token_set_ratio helps ignore "noise" words like 'how', 'much', 'is'
+        # B2. RapidFuzz Search
         best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.token_set_ratio)
         
-        # We lowered this to 60 to be more forgiving of conversational filler
         if best_match and best_match[1] > 60:
             matched_id = best_match[2] 
             for service in services_db:
@@ -152,4 +151,3 @@ async def chat_bot(query: str, context: str = "portfolio"):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
-
