@@ -316,12 +316,13 @@
             box-shadow: 0 0 25px rgba(65, 90, 119, 0.8);
         }
         .modal-content {
-    background-image: linear-gradient(rgba(15, 15, 15, 0.9), rgba(21, 21, 21, 0.9)), 
+    /* ... keep your other settings ... */
+    background-image: linear-gradient(rgba(15, 15, 15, 0.85), rgba(21, 21, 21, 0.85)), 
                       url('logo/Azul.png');
-    background-size: 200px;
-    background-position: bottom right;
+    background-size: 180px; /* Slightly smaller for better padding */
+    background-position: calc(100% + 20px) calc(100% + 20px); /* Tucks it into the corner */
     background-repeat: no-repeat;
-    /* This makes the logo look like a faint watermark in your blueprint */
+    background-blend-mode: overlay; /* This makes it look like a watermark */
 }
     </style>
 </head>
@@ -397,7 +398,7 @@
         <div class="tech-pill">UI/UX DESIGN</div>
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
-  </div>     <footer class="social-links" style="justify-content: center; margin-bottom: 20px; width: 100%; max-width: 1200px;">
+    <footer class="social-links" style="justify-content: center; margin-bottom: 20px; width: 100%; max-width: 1200px;">
         <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
         <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
         <a href="#" id="openModalBtn">Resume / About ↗</a>
