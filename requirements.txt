@@ -1,4 +1,4 @@
 fastapi
 uvicorn
 rapidfuzz
-google-generativeai
+google-genai
