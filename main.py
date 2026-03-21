@@ -134,22 +134,23 @@ async def chat_bot(query: str, context: str = "portfolio"):
                     rag_reply = await generate_rag_response(query, service)
                     return {"response": rag_reply, "match": True}
 
-       # B2. UPDATED RapidFuzz Search (More sensitive)
-    # Using token_set_ratio helps ignore "noise" words like 'how', 'much', 'is'
-    best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.token_set_ratio)
-    
-    # We lowered this to 60 to be more forgiving of conversational filler
-    if best_match and best_match[1] > 60:
-        matched_id = best_match[2] 
-        for service in services_db:
-            if service['id'] == matched_id:
-                rag_reply = await generate_rag_response(query, service)
-                return {"response": rag_reply, "match": True}
+        # B2. UPDATED RapidFuzz Search (More sensitive)
+        # Using token_set_ratio helps ignore "noise" words like 'how', 'much', 'is'
+        best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.token_set_ratio)
         
+        # We lowered this to 60 to be more forgiving of conversational filler
+        if best_match and best_match[1] > 60:
+            matched_id = best_match[2] 
+            for service in services_db:
+                if service['id'] == matched_id:
+                    rag_reply = await generate_rag_response(query, service)
+                    return {"response": rag_reply, "match": True}
+            
         # B3. Fallback
-    rag_reply = await generate_rag_response(query, None)
-    return {"response": rag_reply, "match": False}
+        rag_reply = await generate_rag_response(query, None)
+        return {"response": rag_reply, "match": False}
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
