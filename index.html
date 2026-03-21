@@ -276,6 +276,35 @@
             .hero h1 { font-size: 2.2rem; }
             .hero h2 { font-size: 1rem; }
         }
+        /* 6. Scroll to Top Button */
+        #scrollTopBtn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 999;
+            border: 1px solid #415a77;
+            background: linear-gradient(145deg, #0a0a0a, #111);
+            color: #415a77;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: all 0.3s ease;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scrollTopBtn:hover {
+            background: #415a77;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(65, 90, 119, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -573,31 +602,58 @@
             }
         });
         // --- Collapsible Case Studies Logic ---
-        const trigger = document.getElementById('case-study-trigger');
-        const content = document.getElementById('case-study-content');
+        const trigger = document.getElementById('case-study-trigger');
+        const content = document.getElementById('case-study-content');
+        let hoverTimer; // Variable to store our persistence timer
 
-        const expandSection = () => {
-            content.style.maxHeight = "5000px"; // Large enough to reveal all content
-            content.style.opacity = "1";
-            trigger.style.display = "none"; // Hide the trigger once opened
-        };
+        const expandSection = () => {
+            content.style.maxHeight = "5000px"; 
+            content.style.opacity = "1";
+            trigger.style.display = "none"; 
+        };
 
-        // Manual Click support
-        trigger.addEventListener('click', expandSection);
+        // Manual Click support
+        trigger.addEventListener('click', expandSection);
 
-        // Persistent Scroll support
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                // Wait 0.8 seconds at the trigger line before auto-expanding
-                setTimeout(() => {
-                    expandSection();
-                }, 800);
-            }
-        }, { threshold: 1.0 });
+        // Persistent Scroll support (Fixed)
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                // User is looking at the trigger, start the 800ms countdown
+                hoverTimer = setTimeout(() => {
+                    expandSection();
+                }, 800);
+            } else {
+                // User scrolled away before 800ms, cancel the expansion
+                clearTimeout(hoverTimer);
+            }
+        }, { threshold: 0.5 }); // Lowered to 50% visibility to guarantee it fires
 
-        observer.observe(trigger);
+        observer.observe(trigger);
+
+        // --- Scroll to Top Logic ---
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+        window.addEventListener('scroll', () => {
+            // Show button after scrolling down 500px
+            if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+                scrollTopBtn.style.display = "flex";
+                setTimeout(() => scrollTopBtn.style.opacity = "1", 10);
+            } else {
+                scrollTopBtn.style.opacity = "0";
+                setTimeout(() => scrollTopBtn.style.display = "none", 300);
+            }
+        });
+
+        // Smooth scroll to top on click
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     </script>
     
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+    <button id="scrollTopBtn" title="Return to Top">↑</button>
 </body>
 </html>
