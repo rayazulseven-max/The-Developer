@@ -71,10 +71,10 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None)
     5. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
     """
     
-    try:
-        # 3. NEW SDK GENERATION CALL
+   try:
+        # 3. NEW SDK GENERATION CALL (Updated to 2.5)
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.5-flash',
             contents=system_prompt
         )
         return response.text
