@@ -45,20 +45,8 @@
         }
 
         .modal-content {
-            background: linear-gradient(145deg, #0f0f0f, #151515);
-            /* --- FIXED WATERMARK --- */
-            /* --- FIXED WATERMARK & STRIPE --- */
-            background-image: linear-gradient(rgba(15, 15, 15, 0.92), rgba(15, 15, 15, 0.92)), url('logo/Azul.png');
-            background-size: 280px; /* Made slightly larger for center placement */
-            background-position: center; /* Dead center behind the text */
-            background-repeat: no-repeat;
-            background-blend-mode: screen; /* Changed to 'screen' to interact better with the dark background */
-            background-size: cover, 280px; /* Gradient covers everything, logo stays 280px */
-            background-position: center, center; 
-            background-repeat: no-repeat, no-repeat;
-            background-blend-mode: screen; 
-            
-            border: 1px solid #333;
+            background: transparent; /* Card background is now gone */
+            border: 1px solid #333; /* Keeps a thin frame for the 'blueprint' feel */
             border-radius: 12px;
             padding: 40px;
             width: 90%;
@@ -70,6 +58,21 @@
             box-sizing: border-box;
             max-height: 85vh; 
             overflow-y: auto; 
+            z-index: 1;
+        }
+
+        /* The Sharp, Solid Logo */
+        .modal-content::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('logo/Azul.png');
+            background-size: 320px; /* Slightly larger for a bold background */
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 1.0; /* FULL SHARP - NO FADE */
+            z-index: -1; /* Sits behind text but stays solid */
+            pointer-events: none;
         }
 
 
