@@ -371,6 +371,9 @@
             setTimeout(() => { btn.innerText = originalText; }, 3000);
         }
     }
+    // IP PROTECTION: Disable Right-Click
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
 </script>
 </body>
 </html>
