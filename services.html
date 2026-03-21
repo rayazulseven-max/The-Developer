@@ -7,6 +7,11 @@
     <style>
         body { font-family: -apple-system, system-ui, sans-serif; background-color: #030303; color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .filter-sidebar { width: 250px; background: #0f0f0f; border-right: 1px solid #272727; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        /* Stops the left sidebar inputs from stretching vertically */
+        .filter-sidebar input, 
+        .filter-sidebar select {
+            flex: none;
+        }
         /* Universal Typography for Sidebar */
         .brand-logo-text { color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
         .developer-tag { font-size: 0.8em; color: #aaaaaa; margin: 0; letter-spacing: 1px; }
@@ -42,43 +47,30 @@
             z-index: -1; /* Behind the text */
             pointer-events: none;
         }
-        /* --- VERTICAL AUTO-SCANNER --- */
         /* --- CLEAN HOVER SCANNER --- */
         .details-viewport {
-            height: 130px; /* Fixed height for the text area */
             height: 100px; /* Compact, fixed window for the scroll */
             overflow: hidden;
             position: relative;
             margin-top: 10px;
-            /* Smooth fade effect at top and bottom */
-            mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
-            -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
             /* FADING REMOVED FOR MAXIMUM READABILITY */
         }
 
         .details-scroller {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            animation: verticalScan 10s ease-in-out infinite;
             gap: 12px;
             /* Smooth transition instead of forced animation */
             transition: transform 4s ease-in-out; 
             transform: translateY(0);
         }
 
-        /* Pauses the scan when you hover so people can read a specific part */
         /* ONLY SCROLLS ON HOVER */
         .product-card:hover .details-scroller {
-            animation-play-state: paused;
             /* This moves the content up just enough to see the bottom tags */
             transform: translateY(calc(-100% + 100px));
         }
 
-        @keyframes verticalScan {
-            0%, 20% { transform: translateY(0); } /* Pause at the top */
-            50%, 70% { transform: translateY(calc(-100% + 130px)); } /* Scroll to reveal the bottom */
-            90%, 100% { transform: translateY(0); } /* Smooth reset to top */
         .product-card {
             background: #1a1a1a; 
             border-radius: 8px; 
@@ -92,29 +84,13 @@
             /* Box height is now natural, not forced to 300px */
         }
 
-        
         .tag-badge {
             background: #222; 
             padding: 4px 10px; 
             border-radius: 4px; 
-            margin-right: 6px; 
             font-size: 0.75em; 
             color: #888;
-            display: inline-block;
             border: 1px solid #333;
-            white-space: normal; /* Allow tags to wrap inside the scroller */
-        }
-
-        .product-card {
-            height: 300px; /* Lock all cards to the same height */
-            display: flex;
-            flex-direction: column;
-        }
-
-        @keyframes tickerScroll {
-            0% { transform: translateX(0); }
-            /* Scrolls exactly halfway, then repeats seamlessly */
-            100% { transform: translateX(-50%); } 
         }
         .product-card:hover { border-color: #415a77; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .product-card:active { transform: translateY(0); }
@@ -128,6 +104,17 @@
         .user { background: #415a77; align-self: flex-end; border-bottom-right-radius: 2px; }
         .chat-input-area { padding: 20px; border-top: 1px solid #272727; display: flex; gap: 10px; }
         input, select { flex: 1; background: #222; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; }
+        input, select { 
+            flex: 1; 
+            background: #222; 
+            border: 1px solid #333; 
+            color: white; 
+            padding: 8px 12px; 
+            border-radius: 6px; 
+            outline: none; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
         button { background: #415a77; border: none; color: white; padding: 0 15px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .back-link { color: #888; text-decoration: none; font-size: 0.8em; font-weight: bold; }
         .back-link:hover { color: white; }
@@ -288,7 +275,6 @@
                 <div class="details-viewport">
                     <div class="details-scroller">
                         <p style="font-size: 0.85em; color: #aaa; margin: 0; line-height: 1.6;">${s.description}</p>
-                        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <div style="display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 10px;">
                             ${s.tags.map(t => `<span class="tag-badge">${t}</span>`).join('')}
                         </div>
@@ -298,7 +284,6 @@
             `;
         }).join('');
     }
-
     function filterServices() {
         const query = document.getElementById('serviceSearch').value.toLowerCase();
         const category = document.getElementById('categoryFilter').value;
