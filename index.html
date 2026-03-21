@@ -46,6 +46,12 @@
 
         .modal-content {
             background: linear-gradient(145deg, #0f0f0f, #151515);
+            /* --- FIXED WATERMARK --- */
+            background-image: linear-gradient(rgba(15, 15, 15, 0.92), rgba(15, 15, 15, 0.92)), url('logo/Azul.png');
+            background-size: 280px; /* Made slightly larger for center placement */
+            background-position: center; /* Dead center behind the text */
+            background-repeat: no-repeat;
+            background-blend-mode: screen; /* Changed to 'screen' to interact better with the dark background */
             border: 1px solid #333;
             border-radius: 12px;
             padding: 40px;
@@ -56,16 +62,8 @@
             transition: transform 0.3s ease;
             box-shadow: 0 15px 40px rgba(0,0,0,0.7);
             box-sizing: border-box;
-            max-height: 85vh; /* Prevents it from being taller than the phone screen */
-            overflow-y: auto; /* Creates a scrollbar inside the modal if needed */
-            
-            /* --- RESTORED WATERMARK --- */
-            background-image: linear-gradient(rgba(15, 15, 15, 0.85), rgba(21, 21, 21, 0.85)), 
-                              url('logo/Azul.png');
-            background-size: 180px; 
-            background-position: calc(100% + 20px) calc(100% + 20px); 
-            background-repeat: no-repeat;
-            background-blend-mode: overlay; 
+            max-height: 85vh; 
+            overflow-y: auto; 
         }
 
 
