@@ -42,10 +42,10 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 # ==========================================
 # 🧠 THE RAG GENERATOR FUNCTION (GEMINI POWERED)
 # ==========================================
+# ==========================================
+# 🧠 THE RAG GENERATOR FUNCTION (GEMINI POWERED)
+# ==========================================
 async def generate_rag_response(user_query: str, retrieved_service: dict = None):
-    """
-    Takes the data RapidFuzz found and feeds it to Gemini to generate a response.
-    """
     if retrieved_service:
         context = f"""
         SERVICE FOUND IN DATABASE:
@@ -78,9 +78,8 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None)
         response = model.generate_content(system_prompt)
         return response.text
     except Exception as e:
-        print(f"Gemini API Error: {e}")
-        return "System offline. Please contact Ray directly via the Contact Form."
-
+        # THIS LINE IS THE FIX: It returns the actual error to the chat window
+        return f"<strong>Gemini Error:</strong> {str(e)}"
 
 # 3. The Dual-Routing Endpoint
 @app.get("/chat")
