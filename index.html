@@ -346,7 +346,22 @@
         <div class="tech-pill">UI/UX DESIGN</div>
         <div class="tech-pill">JAVASCRIPT / HTML / CSS</div>
     </div>
-    <section style="padding: 100px 20px; max-width: 1200px; width: 100%; animation: fadeIn 1.5s ease-out;">
+  </div>     <footer class="social-links" style="justify-content: center; margin-bottom: 20px; width: 100%; max-width: 1200px;">
+        <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
+        <a href="#" id="openModalBtn">Resume / About ↗</a>
+    </footer>
+
+    <div id="case-study-trigger" style="text-align: center; padding: 20px 0 60px 0; cursor: pointer; width: 100%;">
+        <span style="font-size: 0.7rem; letter-spacing: 3px; color: #415a77; text-transform: uppercase; transition: color 0.3s;">
+            [ Explore Deep Dives & Validation ]
+        </span>
+        <div style="width: 50px; height: 1px; background: #415a77; margin: 15px auto;"></div>
+    </div>
+
+    <div id="case-study-content" style="max-height: 0; overflow: hidden; transition: max-height 1.5s ease-in-out, opacity 1s ease-in-out; opacity: 0; display: flex; flex-direction: column; align-items: center; width: 100%;">
+
+    <section style="padding: 100px 20px; max-width: 1200px; width: 100%; animation: fadeIn 1.5s ease-out;">
         <div style="background: linear-gradient(165deg, #0d1117, #010409); border: 1px solid #30363d; border-radius: 20px; padding: 60px; display: flex; flex-wrap: wrap; gap: 50px; align-items: center;">
             
             <div style="flex: 1; min-width: 300px; text-align: center;">
@@ -461,11 +476,7 @@
         </div>
     </section>
 
-    <footer class="social-links">
-        <a href="https://github.com/rayazulseven-max" target="_blank">GitHub ↗</a>
-        <a href="https://www.linkedin.com/in/ray-azul-dev/" target="_blank">LinkedIn ↗</a>
-        <a href="#" id="openModalBtn">Resume / About ↗</a>
-    </footer>
+   </div>
 
     <div id="resumeModal" class="modal-overlay">
         <div class="modal-content">
@@ -561,6 +572,30 @@
                 contactModal.classList.remove("show");
             }
         });
+        // --- Collapsible Case Studies Logic ---
+        const trigger = document.getElementById('case-study-trigger');
+        const content = document.getElementById('case-study-content');
+
+        const expandSection = () => {
+            content.style.maxHeight = "5000px"; // Large enough to reveal all content
+            content.style.opacity = "1";
+            trigger.style.display = "none"; // Hide the trigger once opened
+        };
+
+        // Manual Click support
+        trigger.addEventListener('click', expandSection);
+
+        // Persistent Scroll support
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                // Wait 0.8 seconds at the trigger line before auto-expanding
+                setTimeout(() => {
+                    expandSection();
+                }, 800);
+            }
+        }, { threshold: 1.0 });
+
+        observer.observe(trigger);
     </script>
     
     <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
