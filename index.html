@@ -21,6 +21,7 @@
             -webkit-user-select: none;
             user-select: none;
         }
+        
         /* 5. Resume & Contact Modals */
         .modal-overlay {
             display: none; 
@@ -314,10 +315,22 @@
             transform: translateY(-5px) !important;
             box-shadow: 0 0 25px rgba(65, 90, 119, 0.8);
         }
+        .modal-content {
+    background-image: linear-gradient(rgba(15, 15, 15, 0.9), rgba(21, 21, 21, 0.9)), 
+                      url('logo/Azul.png');
+    background-size: 200px;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+    /* This makes the logo look like a faint watermark in your blueprint */
+}
     </style>
 </head>
 <body>
-
+<div style="margin-bottom: 30px; animation: fadeIn 1.5s ease-out;">
+    <img src="logo/Azul.png" alt="The Prismatic Sentinel" 
+         style="width: 140px; height: auto; border-radius: 10px; 
+                filter: drop-shadow(0 0 20px rgba(65, 90, 119, 0.4));">
+</div>
     <header class="hero">
         <h1>Ray Azul Perez</h1>
         <h2>AI Developer • Data Analyst • UI Engineer</h2>
