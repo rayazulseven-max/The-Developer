@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from rapidfuzz import process, fuzz
 import json
 import datetime
-import re  # Added for Clinical Code Regex Matching
+import re  
 
 app = FastAPI()
 
@@ -21,99 +21,111 @@ with open('services.json', 'r') as f:
 with open('hcpcs.json', 'r') as f:
     hcpcs_db = json.load(f)
 
-
 # 2. Build Isolated Search Spaces
-# PORTFOLIO DICTIONARY
 services_search_dict = {}
 for service in services_db:
     combined_text = f"{service['name']} {service['category']} {service['description']} {' '.join(service['tags'])}"
     services_search_dict[service['id']] = combined_text
 
-# MEDICAL DICTIONARY: We make the description and tags repeat to give them more "weight"
 hcpcs_search_dict = {}
 for item in hcpcs_db:
     tags = " ".join(item.get('tags', []))
-    # By repeating the description and tags, we force the fuzzy matcher to care more about them than the category
     weighted_text = f"{item['description']} {item['description']} {tags} {tags} {item['code']}"
     hcpcs_search_dict[item['code']] = weighted_text
 
 
+# ==========================================
+# 🧠 NEW: THE RAG GENERATOR FUNCTION
+# ==========================================
+async def generate_rag_response(user_query: str, retrieved_service: dict = None):
+    """
+    This function takes the data RapidFuzz found and feeds it to an LLM.
+    """
+    if retrieved_service:
+        # We found a match in the JSON! Format it as facts for the AI.
+        context = f"""
+        SERVICE FOUND IN DATABASE:
+        Name: {retrieved_service['name']}
+        Category: {retrieved_service['category']}
+        Price: ${retrieved_service['price']}
+        Details: {retrieved_service['description']}
+        """
+    else:
+        # No match found. Tell the AI to handle it gracefully.
+        context = "No specific service found in the database for this query."
+
+    system_prompt = f"""
+    You are Azul-Bot, the professional sales agent for Ray Azul Perez.
+    The user asked: "{user_query}"
+    
+    Here is the factual data retrieved from your database:
+    {context}
+    
+    INSTRUCTIONS:
+    1. Answer the user's query naturally and conversationally using ONLY the facts above.
+    2. Be concise, clinical, and helpful. 
+    3. Format the service name in bold HTML tags (e.g., <strong>Name</strong>).
+    4. If no service was found in the database, politely suggest they fill out the Contact Form for a custom quote.
+    """
+    
+    # ⚠️ PLACEHOLDER: This is where we will call the OpenAI or Gemini API!
+    # mock_response = await call_llm_api(system_prompt)
+    
+    # For right now, we will just return what the AI *would* see, so you can test the plumbing.
+    return "<strong>[LLM WILL GENERATE RESPONSE HERE BASED ON:]</strong><br><br>" + context.replace('\n', '<br>')
+
+
 # 3. The Dual-Routing Endpoint
-# Added 'context' parameter to determine which brain to use (defaults to portfolio so your old site doesn't break)
 @app.get("/chat")
 async def chat_bot(query: str, context: str = "portfolio"):
     query_lower = query.lower()
     
-    # Logging feature (Now tracks which context was used)
     with open("chat_logs.txt", "a") as log_file:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         log_file.write(f"[{timestamp}] Context: [{context.upper()}] | User Asked: {query}\n")
 
-
     # ==========================================
-    # ROUTE A: THE CLINICAL INTELLIGENCE ENGINE
+    # ROUTE A: THE CLINICAL INTELLIGENCE ENGINE (Left untouched)
     # ==========================================
     if context == "medical":
-        
-        # A1. The Clinical Interceptor (Zero-Latency Exact Match)
-        # Checks if query is exactly 1 letter followed by 4 digits (e.g., E0143, J1745)
         exact_code_pattern = r"^[a-zA-Z]\d{4}$"
         if re.match(exact_code_pattern, query.strip()):
             matched_code = query.strip().upper()
             for item in hcpcs_db:
                 if item['code'] == matched_code:
                     price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
-                    return {
-                        "response": f"<strong>{item['code']}</strong> ({item['category']}): {item['description']} <br><strong>Est. Cost: {price}</strong>",
-                        "match": True
-                    }
+                    return {"response": f"<strong>{item['code']}</strong> ({item['category']}): {item['description']} <br><strong>Est. Cost: {price}</strong>", "match": True}
         
-        # A2. Clinical Fuzzy Matcher (For plain English searches)
         best_match = process.extractOne(query_lower, hcpcs_search_dict, scorer=fuzz.WRatio)
-        
-        # INCREASED THRESHOLD: Raised from 65 to 80 to prevent aggressive hallucinations 
         if best_match and best_match[1] > 80:
-            matched_code = best_match[2] # Extracts the HCPCS Code we assigned as the key
+            matched_code = best_match[2] 
             for item in hcpcs_db:
                 if item['code'] == matched_code:
                     price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
-                    return {
-                        "response": f"Clinical Match Found: <strong>{item['code']}</strong> ({item['category']}). {item['description']} <br><strong>Est. Cost: {price}</strong>",
-                        "match": True
-                    }
+                    return {"response": f"Clinical Match Found: <strong>{item['code']}</strong> ({item['category']}). {item['description']} <br><strong>Est. Cost: {price}</strong>", "match": True}
         
-        # A3. Medical Fallback (Will trigger much more often now if the query isn't a solid match)
-        return {
-            "response": "I couldn't find a direct clinical match. Please verify the supply name, drug, or HCPCS code.",
-            "match": False
-        }
+        return {"response": "I couldn't find a direct clinical match. Please verify the supply name, drug, or HCPCS code.", "match": False}
 
 
     # ==========================================
-    # ROUTE B: THE PORTFOLIO SALES AGENT
+    # ROUTE B: THE PORTFOLIO SALES AGENT (RAG INTEGRATED)
     # ==========================================
     else:
-        # B1. The Intent Interceptor
         update_keywords = ["update", "old", "legacy", "fix", "redesign", "overhaul"]
         build_keywords = ["scratch", "new", "build", "create", "make me a"]
 
+        # B1. Intent Interceptor
         if any(word in query_lower for word in update_keywords) and ("site" in query_lower or "website" in query_lower):
-            matched_id = "svc_002"
             for service in services_db:
-                if service['id'] == matched_id:
-                    return {
-                        "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
-                        "match": True
-                    }
+                if service['id'] == "svc_002":
+                    rag_reply = await generate_rag_response(query, service)
+                    return {"response": rag_reply, "match": True}
 
         elif any(word in query_lower for word in build_keywords) and ("site" in query_lower or "website" in query_lower or "app" in query_lower):
-            matched_id = "svc_010"
             for service in services_db:
-                if service['id'] == matched_id:
-                    return {
-                        "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
-                        "match": True
-                    }
+                if service['id'] == "svc_010":
+                    rag_reply = await generate_rag_response(query, service)
+                    return {"response": rag_reply, "match": True}
 
         # B2. RapidFuzz Search
         best_match = process.extractOne(query_lower, services_search_dict, scorer=fuzz.WRatio)
@@ -122,16 +134,13 @@ async def chat_bot(query: str, context: str = "portfolio"):
             matched_id = best_match[2] 
             for service in services_db:
                 if service['id'] == matched_id:
-                    return {
-                        "response": f"I think you're looking for our <strong>{service['name']}</strong> package (${service['price']}). {service['description']}",
-                        "match": True
-                    }
+                    # Pass the found JSON data to the LLM Generator
+                    rag_reply = await generate_rag_response(query, service)
+                    return {"response": rag_reply, "match": True}
         
-        # B3. Portfolio Fallback
-        return {
-            "response": 'I\'m not exactly sure what you need, but I can definitely help! Why don\'t you fill out the <strong><a href="#" onclick="openModal(); return false;" style="color: #415a77;">Contact Form</a></strong> for a custom quote?',
-            "match": False
-        }
+        # B3. Portfolio Fallback (Nothing found, let the LLM handle it)
+        rag_reply = await generate_rag_response(query, None)
+        return {"response": rag_reply, "match": False}
 
 if __name__ == "__main__":
     import uvicorn
