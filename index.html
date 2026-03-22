@@ -829,35 +829,38 @@ function closeAdminModal() {
 async function initiateAdminSession() {
     adminPasskey = document.getElementById('admin-password').value;
     try {
+        // Fetches all blurbs because admin=true
         const response = await fetch(`${SYSTEM_ENDPOINT}?admin=true&passkey=${adminPasskey}`);
         const data = await response.json();
 
-        if (data && data.length >= 0) { // If auth works, it returns an array
+        if (data && data.length >= 0) {
             document.getElementById('admin-controls').style.display = 'block';
             const list = document.getElementById('pending-list');
             list.innerHTML = "";
             
-            const pendingItems = data.filter(b => b.status === "PENDING");
-            
-            if (pendingItems.length === 0) {
-                list.innerHTML = "<p style='color:#888; font-size: 0.8rem;'>No pending items.</p>";
-            } else {
-                pendingItems.forEach(b => {
-                    const item = document.createElement('div');
-                    item.style.cssText = "padding: 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center;";
-                    item.innerHTML = `
-                        <span style="font-size: 0.8rem; color: #888; width: 60%;">${b.name}: "${b.comment}"</span>
-                        <div style="display: flex; gap: 10px;">
-                            <button onclick="approveBlurb('${b.comment}')" style="background: transparent; border: 1px solid #415a77; color: #415a77; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">APPROVE</button>
-                            <button onclick="deleteBlurb('${b.comment}')" style="background: transparent; border: 1px solid #880808; color: #880808; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">DELETE</button>
-                        </div>
-                    `;
-                    list.appendChild(item);
-                });
-            }
+            // Show EVERY blurb in the database
+            data.forEach(b => {
+                const isApproved = b.status === "APPROVED";
+                const item = document.createElement('div');
+                item.style.cssText = "padding: 12px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; gap: 10px;";
+                
+                item.innerHTML = `
+                    <div style="width: 60%;">
+                        <span style="font-size: 0.6rem; color: ${isApproved ? '#415a77' : '#888'}; font-weight: bold; text-transform: uppercase;">
+                            [ ${b.status} ]
+                        </span>
+                        <div style="font-size: 0.8rem; color: #ccc; margin-top: 4px;">${b.name}: "${b.comment}"</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        ${!isApproved ? `<button onclick="approveBlurb('${b.comment}')" style="background: #415a77; border: none; color: #fff; cursor: pointer; font-size: 0.6rem; padding: 5px 10px; border-radius: 4px;">APPROVE</button>` : ''}
+                        <button onclick="deleteBlurb('${b.comment}')" style="background: transparent; border: 1px solid #880808; color: #880808; cursor: pointer; font-size: 0.6rem; padding: 5px 10px; border-radius: 4px;">DELETE</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
         }
     } catch (e) {
-        alert("Authorization Failed or Endpoint Error.");
+        alert("Authorization Failed: Access Denied.");
     }
 }
 
