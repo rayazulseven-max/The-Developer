@@ -716,31 +716,60 @@ scrollTopBtn.addEventListener('click', () => {
 window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-            function addBlurb() {
-    const input = document.getElementById('comment-input');
+            function showToast() {
+    const toast = document.getElementById('toast-notification');
+    // Show toast with "Slide Up" effect
+    toast.style.opacity = "1";
+    toast.style.visibility = "visible";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.visibility = "hidden";
+        toast.style.transform = "translateX(-50%) translateY(20px)";
+    }, 3000);
+}
+
+function addBlurb() {
+    const nameInput = document.getElementById('name-input');
+    const commentInput = document.getElementById('comment-input');
     const container = document.getElementById('blurbs-container');
     
-    if (input.value.trim() !== "") {
-        // Create the new tiny blurb
+    const nameValue = nameInput.value.trim() || "Anonymous";
+    const commentValue = commentInput.value.trim();
+    
+    if (commentValue !== "") {
         const newBlurb = document.createElement('div');
         newBlurb.style.cssText = `
-            background: #161b22; 
-            border: 1px solid #415a77; 
+            background: #111; 
+            border: 1px solid #222; 
             padding: 15px; 
             border-radius: 8px; 
             font-size: 0.85rem; 
-            color: #fff; 
-            max-width: 200px; 
+            color: #888; 
+            max-width: 220px; 
             text-align: left;
             animation: slideUp 0.5s ease-out;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            transition: border-color 0.3s;
+        `;
+
+        newBlurb.innerHTML = `
+            <span style="color: #415a77; font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px;">
+                ${nameValue}
+            </span>
+            <span style="line-height: 1.5;">"${commentValue}"</span>
         `;
         
-        newBlurb.innerText = `"${input.value}"`;
-        
-        // Add to container and clear input
+        newBlurb.onmouseover = () => newBlurb.style.borderColor = "#415a77";
+        newBlurb.onmouseout = () => newBlurb.style.borderColor = "#222";
+
         container.prepend(newBlurb);
-        input.value = "";
+        commentInput.value = "";
+        
+        // Trigger the "Thank You" System Message
+        showToast();
     }
 }
 </script>
@@ -749,13 +778,18 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
 <section id="community-section" style="padding: 60px 20px; max-width: 1000px; width: 100%; text-align: center; border-top: 1px solid #222;">
     <h2 style="font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #415a77; margin-bottom: 30px;">Community Feedback</h2>
     
-    <div style="background: #0a0a0a; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
-        <textarea id="comment-input" placeholder="Leave a tiny blurb..." style="width: 100%; background: transparent; border: none; color: #fff; outline: none; resize: none; font-family: inherit; margin-bottom: 10px;" rows="2"></textarea>
-        <div style="display: flex; justify-content: flex-end;">
-            <button onclick="addBlurb()" style="background: #415a77; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-transform: uppercase;">Post Blurb</button>
-        </div>
+    <div style="background: #0a0a0a; border: 1px solid #333; padding: 25px; border-radius: 12px; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto; text-align: left;">
+    <input type="text" id="name-input" placeholder="Your Name/Alias" style="width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 6px; margin-bottom: 15px; outline: none; font-family: inherit; font-size: 0.9rem;">
+    
+    <textarea id="comment-input" placeholder="Leave a tiny blurb..." style="width: 100%; background: #111; border: 1px solid #222; color: #fff; padding: 10px; border-radius: 6px; outline: none; resize: none; font-family: inherit; margin-bottom: 15px; font-size: 0.9rem;" rows="2"></textarea>
+    
+    <div style="display: flex; justify-content: flex-end;">
+        <button onclick="addBlurb()" style="background: #415a77; color: #fff; border: none; padding: 10px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;">Post Blurb</button>
     </div>
-
+</div>
+<div id="toast-notification" style="position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0a0a0a; border: 1px solid #415a77; color: #fff; padding: 12px 25px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 0 20px rgba(65, 90, 119, 0.4); pointer-events: none;">
+    System Message: Blurb Successfully Transmitted.
+</div>
     <div id="blurbs-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
         <div class="blurb-item" style="background: #111; border: 1px solid #222; padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #888; max-width: 200px; text-align: left; animation: fadeIn 1s ease-out;">
             "Love the RAG implementation on the HCPCS engine!"
