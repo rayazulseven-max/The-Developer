@@ -22,7 +22,7 @@ body {
     user-select: none;
 }
 
-/* 5. Resume & Contact Modals */
+/* --- Modals --- */
 .modal-overlay {
     display: none; 
     position: fixed; 
@@ -134,7 +134,7 @@ body {
     background-color: #5a7b9e;
 }
 
-/* 1. Hero Section */
+/* --- Hero Section --- */
 .hero {
     text-align: center;
     margin-bottom: 50px;
@@ -164,7 +164,7 @@ body {
     line-height: 1.6;
 }
 
-/* 1.5 Certifications Grid */
+/* --- Certifications Grid --- */
 .certifications-container {
     display: flex;
     justify-content: center;
@@ -192,7 +192,7 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
-/* 2. The Suite (Project Grid) */
+/* --- The Suite (Project Grid) --- */
 .suite-grid {
     display: flex;
     gap: 30px;
@@ -241,7 +241,7 @@ body {
     color: #415a77;
 }
 
-/* 3. Tech Stack Pills */
+/* --- Tech Stack Pills --- */
 .tech-stack {
     display: flex;
     flex-wrap: wrap;
@@ -268,7 +268,7 @@ body {
     background: #1a1a1a;
 }
 
-/* 4. Footer Links */
+/* --- Footer Links --- */
 .social-links {
     display: flex;
     gap: 30px;
@@ -287,7 +287,7 @@ body {
     color: #ffffff;
 }
 
-/* Animations */
+/* --- Animations --- */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -308,14 +308,14 @@ body {
   cursor: wait;
 }
 
-/* Mobile Adjustments */
+/* --- Mobile Adjustments --- */
 @media (max-width: 768px) {
     .suite-grid { flex-direction: column; }
     .hero h1 { font-size: 2.2rem; }
     .hero h2 { font-size: 1rem; }
 }
 
-/* 6. Scroll to Top Button - Nuclear Fix */
+/* --- Scroll to Top Button --- */
 #scrollTopBtn {
     position: fixed;
     bottom: 30px;
@@ -355,7 +355,7 @@ body {
 <body>
 
 <div style="margin-bottom: 30px; animation: fadeIn 1.5s ease-out;">
-    <img src="logo/Azul.png" alt="The Prismatic Sentinel" style="width: 140px; height: auto; border-radius: 10px; filter: drop-shadow(0 0 20px rgba(65, 90, 119, 0.4));">
+    <img src="logo/Azul.png" alt="The Prismatic Sentinel" style="width: 140px; height: auto; border-radius: 10px; filter: drop-shadow(0 0 20px rgba(65, 90, 119, 0.4)); cursor: pointer;">
 </div>
 
 <header class="hero">
@@ -591,6 +591,20 @@ body {
     </div>
 </div>
 
+<div id="adminModal" class="modal-overlay">
+    <div class="modal-content" style="border-color: #415a77;">
+        <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+        <h2 style="color: #415a77; text-transform: uppercase; letter-spacing: 2px;">Command Override</h2>
+        <input type="password" id="admin-password" placeholder="Passkey" style="width: 100%; background: #111; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; margin-bottom: 20px; box-sizing: border-box; outline: none;">
+        <button onclick="initiateAdminSession()" class="contact-btn">Authorize</button>
+        
+        <div id="admin-controls" style="display:none; margin-top: 30px; border-top: 1px solid #222; padding-top: 20px;">
+            <p style="font-size: 0.7rem; color: #5a7b9e; text-transform: uppercase;">Pending Approvals:</p>
+            <div id="pending-list" style="max-height: 200px; overflow-y: auto;"></div>
+        </div>
+    </div>
+</div>
+
 <button id="scrollTopBtn" title="Return to Top">↑</button>
 
 <div id="toast-notification" style="position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0a0a0a; border: 1px solid #415a77; color: #fff; padding: 12px 25px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; z-index: 10000; opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 0 20px rgba(65, 90, 119, 0.4); pointer-events: none;">
@@ -659,9 +673,11 @@ function closeContactModal() {
     contactModal.classList.remove("show");
 }
 
+// Ensure clicks outside modals close them, including the new admin modal
 window.addEventListener("click", (e) => {
     if (e.target === resumeModal) resumeModal.classList.remove("show");
     if (e.target === contactModal) contactModal.classList.remove("show");
+    if (e.target === document.getElementById('adminModal')) closeAdminModal();
 });
 
 // --- Scroll & Observer Logic ---
@@ -780,7 +796,7 @@ async function addBlurb() {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: nameVal, comment: commentVal })
+                body: JSON.stringify({ action: "submit", name: nameVal, comment: commentVal })
             });
             
             commentInput.value = "";
@@ -788,6 +804,71 @@ async function addBlurb() {
         } catch (error) {
             console.error("Transmission failed:", error);
         }
+    }
+}
+
+// --- Hidden Admin Logic ---
+let logoClicks = 0;
+let adminPasskey = "";
+
+document.querySelector('img[alt="The Prismatic Sentinel"]').addEventListener('click', () => {
+    logoClicks++;
+    if (logoClicks === 3) {
+        document.getElementById('adminModal').classList.add('show');
+        logoClicks = 0;
+    }
+    setTimeout(() => { logoClicks = 0; }, 2000); 
+});
+
+function closeAdminModal() { 
+    document.getElementById('adminModal').classList.remove('show'); 
+    document.getElementById('admin-controls').style.display = 'none';
+    document.getElementById('admin-password').value = '';
+}
+
+async function initiateAdminSession() {
+    adminPasskey = document.getElementById('admin-password').value;
+    try {
+        const response = await fetch(`${SYSTEM_ENDPOINT}?admin=true&passkey=${adminPasskey}`);
+        const data = await response.json();
+
+        if (data && data.length >= 0) { // If auth works, it returns an array (even if empty)
+            document.getElementById('admin-controls').style.display = 'block';
+            const list = document.getElementById('pending-list');
+            list.innerHTML = "";
+            
+            const pendingItems = data.filter(b => b.status === "PENDING");
+            
+            if (pendingItems.length === 0) {
+                list.innerHTML = "<p style='color:#888; font-size: 0.8rem;'>No pending items.</p>";
+            } else {
+                pendingItems.forEach(b => {
+                    const item = document.createElement('div');
+                    item.style.cssText = "padding: 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center;";
+                    item.innerHTML = `
+                        <span style="font-size: 0.8rem; color: #888; width: 75%;">${b.name}: "${b.comment}"</span>
+                        <button onclick="approveBlurb('${b.comment}')" style="background: transparent; border: 1px solid #415a77; color: #415a77; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">APPROVE</button>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+        }
+    } catch (e) {
+        alert("Authorization Failed or Endpoint Error.");
+    }
+}
+
+async function approveBlurb(commentText) {
+    try {
+        await fetch(SYSTEM_ENDPOINT, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ action: "approve", passkey: adminPasskey, comment: commentText })
+        });
+        alert("System Updated: Blurb Approved.");
+        location.reload(); 
+    } catch (e) {
+        alert("Failed to approve blurb.");
     }
 }
 
