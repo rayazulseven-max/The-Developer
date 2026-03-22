@@ -718,7 +718,7 @@ scrollTopBtn.addEventListener('click', () => {
 });
 
 // --- System Feedback / Blurbs Logic ---
-const SYSTEM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxrKyxRruCQ4MhO0yM8kDiN5Gc8N7IPSixGeMhF62beM9Age_DlTuiiLl-dlu9acHBv/exec';
+const SYSTEM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyFdJthikr6P7shtlLNSUdFUQe3ozr8I0nE4w8rwl9VpYhwqD-KHDrfTw_Plg37Hnu4/exec';
 
 function showToast() {
     const toast = document.getElementById('toast-notification');
@@ -832,7 +832,7 @@ async function initiateAdminSession() {
         const response = await fetch(`${SYSTEM_ENDPOINT}?admin=true&passkey=${adminPasskey}`);
         const data = await response.json();
 
-        if (data && data.length >= 0) { // If auth works, it returns an array (even if empty)
+        if (data && data.length >= 0) { // If auth works, it returns an array
             document.getElementById('admin-controls').style.display = 'block';
             const list = document.getElementById('pending-list');
             list.innerHTML = "";
@@ -846,8 +846,11 @@ async function initiateAdminSession() {
                     const item = document.createElement('div');
                     item.style.cssText = "padding: 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center;";
                     item.innerHTML = `
-                        <span style="font-size: 0.8rem; color: #888; width: 75%;">${b.name}: "${b.comment}"</span>
-                        <button onclick="approveBlurb('${b.comment}')" style="background: transparent; border: 1px solid #415a77; color: #415a77; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">APPROVE</button>
+                        <span style="font-size: 0.8rem; color: #888; width: 60%;">${b.name}: "${b.comment}"</span>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="approveBlurb('${b.comment}')" style="background: transparent; border: 1px solid #415a77; color: #415a77; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">APPROVE</button>
+                            <button onclick="deleteBlurb('${b.comment}')" style="background: transparent; border: 1px solid #880808; color: #880808; cursor: pointer; font-size: 0.6rem; padding: 4px 8px; border-radius: 4px;">DELETE</button>
+                        </div>
                     `;
                     list.appendChild(item);
                 });
@@ -865,10 +868,30 @@ async function approveBlurb(commentText) {
             mode: 'no-cors',
             body: JSON.stringify({ action: "approve", passkey: adminPasskey, comment: commentText })
         });
-        alert("System Updated: Blurb Approved.");
-        location.reload(); 
+        
+        closeAdminModal();
+        loadApprovedBlurbs(); // Re-sync the feed
+        showToast(); 
     } catch (e) {
         alert("Failed to approve blurb.");
+    }
+}
+
+async function deleteBlurb(commentText) {
+    if (confirm("Execute System Wipe: Are you sure you want to delete this blurb?")) {
+        try {
+            await fetch(SYSTEM_ENDPOINT, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "delete", passkey: adminPasskey, comment: commentText })
+            });
+            
+            closeAdminModal();
+            loadApprovedBlurbs(); // Re-sync the feed
+            showToast(); 
+        } catch (e) {
+            alert("Delete sequence failed.");
+        }
     }
 }
 
