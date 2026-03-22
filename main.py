@@ -81,10 +81,12 @@ async def chat_bot(query: str, context: str = "portfolio"):
         {portfolio_context}
         
         INSTRUCTIONS:
-        1. Read the user's query and find the best matching service from the list above. Understand typos (like "customer" instead of "custom").
-        2. If you find a match: Answer conversationally, state the price, and format the service name in bold HTML tags (e.g., <strong>Name</strong>).
-        3. If NO service matches: Politely suggest they fill out the Contact Form for a custom quote.
-        4. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
+        1. Read the user's query and find the best matching service. Understand typos (like "customer").
+        2. If you find a match: Answer conversationally, state the price, and format the service name in <strong>bold</strong>.
+        3. If NO service matches: Politely suggest they fill out the Contact Form.
+        4. HYPERLINKING: Always wrap the words "Contact Form" in this exact HTML tag: 
+           <a href="#" onclick="openModal(); return false;" style="color: #415a77; text-decoration: underline; font-weight: bold;">Contact Form</a>
+        5. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
         """
         
         try:
