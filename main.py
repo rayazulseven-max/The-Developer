@@ -42,7 +42,7 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 # ==========================================
 # 🧠 THE RAG GENERATOR FUNCTION 
 # ==========================================
-async def generate_rag_response(user_query: str, retrieved_service: dict = None, debug_info: str = ""):
+async def generate_rag_response(user_query: str, retrieved_service: dict = None):
     if retrieved_service:
         context = f"""
         SERVICE FOUND IN DATABASE:
@@ -52,21 +52,20 @@ async def generate_rag_response(user_query: str, retrieved_service: dict = None,
         Details: {retrieved_service['description']}
         """
     else:
-        context = f"No specific service found in the database. Debug Info: {debug_info}"
+        context = "No specific service found in the database."
 
     system_prompt = f"""
     You are Azul-Bot, the professional sales agent for Ray Azul Perez.
     The user asked: "{user_query}"
     
-    Here is the factual data retrieved from your database:
+    Here is the most relevant service retrieved from our database:
     {context}
     
     INSTRUCTIONS:
-    1. Answer the user's query naturally and conversationally using ONLY the facts above.
-    2. Be concise, clinical, and helpful. 
-    3. Format the service name in bold HTML tags (e.g., <strong>Name</strong>).
-    4. If no service was found in the database, politely suggest they fill out the Contact Form. If there is Debug Info provided, include it in parentheses at the very end of your response.
-    5. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
+    1. First, decide if the retrieved service actually relates to what the user is asking.
+    2. If it DOES match: Answer naturally using ONLY the facts above. Format the service name in bold HTML tags (e.g., <strong>Name</strong>).
+    3. If it DOES NOT match: Politely say you don't see a specific package for that, and suggest they fill out the Contact Form for a custom quote.
+    4. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
     """
     
     try:
@@ -124,22 +123,17 @@ async def chat_bot(query: str, context: str = "portfolio"):
                     rag_reply = await generate_rag_response(query, service)
                     return {"response": rag_reply, "match": True}
 
-        # 2. LIST BASED PORTFOLIO SEARCH
+        # 2. LIST BASED PORTFOLIO SEARCH (True RAG Architecture)
         best_match = process.extractOne(query_lower, services_search_list, scorer=fuzz.token_set_ratio)
         
         if best_match:
-            score = best_match[1]
-            if score > 50:
-                match_index = best_match[2] 
-                matched_service = services_db[match_index]
-                rag_reply = await generate_rag_response(query, matched_service)
-                return {"response": rag_reply, "match": True}
-            else:
-                # DIAGOSTIC MODE: Sends the failing score directly to the AI!
-                rag_reply = await generate_rag_response(query, None, f"Match Score was too low: {score}")
-                return {"response": rag_reply, "match": False}
+            match_index = best_match[2] 
+            matched_service = services_db[match_index]
+            # Send the closest match to Gemini and let its brain decide if it's relevant!
+            rag_reply = await generate_rag_response(query, matched_service)
+            return {"response": rag_reply, "match": True}
             
-        rag_reply = await generate_rag_response(query, None, "RapidFuzz returned absolutely nothing.")
+        rag_reply = await generate_rag_response(query, None)
         return {"response": rag_reply, "match": False}
 
 if __name__ == "__main__":
