@@ -31,11 +31,12 @@ for service in services_db:
     combined_text = f"{service['name']} {service['category']} {service['description']} {' '.join(service.get('tags', []))}"
     services_search_list.append(combined_text)
 
+# UPDATED: Clean text, no more repeating words!
 hcpcs_search_list = []
 for item in hcpcs_db:
     tags = " ".join(item.get('tags', []))
-    weighted_text = f"{item['description']} {item['description']} {tags} {tags} {item['code']}"
-    hcpcs_search_list.append(weighted_text)
+    clean_text = f"{item['code']} {item['description']} {tags}"
+    hcpcs_search_list.append(clean_text)
 
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
@@ -97,9 +98,9 @@ async def chat_bot(query: str, context: str = "portfolio"):
                     price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
                     return {"response": f"<strong>{item['code']}</strong> ({item['category']}): {item['description']} <br><strong>Est. Cost: {price}</strong>", "match": True}
         
-        # LIST BASED MEDICAL SEARCH
-        best_match = process.extractOne(query_lower, hcpcs_search_list, scorer=fuzz.WRatio)
-        if best_match and best_match[1] > 80:
+        # UPDATED: LIST BASED MEDICAL SEARCH using token_set_ratio
+        best_match = process.extractOne(query_lower, hcpcs_search_list, scorer=fuzz.token_set_ratio)
+        if best_match and best_match[1] > 65:
             match_index = best_match[2] 
             item = hcpcs_db[match_index]
             price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
@@ -129,7 +130,6 @@ async def chat_bot(query: str, context: str = "portfolio"):
         if best_match:
             match_index = best_match[2] 
             matched_service = services_db[match_index]
-            # Send the closest match to Gemini and let its brain decide if it's relevant!
             rag_reply = await generate_rag_response(query, matched_service)
             return {"response": rag_reply, "match": True}
             
