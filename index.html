@@ -715,9 +715,52 @@ scrollTopBtn.classList.remove("visible");
 scrollTopBtn.addEventListener('click', () => {
 window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+            function addBlurb() {
+    const input = document.getElementById('comment-input');
+    const container = document.getElementById('blurbs-container');
+    
+    if (input.value.trim() !== "") {
+        // Create the new tiny blurb
+        const newBlurb = document.createElement('div');
+        newBlurb.style.cssText = `
+            background: #161b22; 
+            border: 1px solid #415a77; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-size: 0.85rem; 
+            color: #fff; 
+            max-width: 200px; 
+            text-align: left;
+            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        `;
+        
+        newBlurb.innerText = `"${input.value}"`;
+        
+        // Add to container and clear input
+        container.prepend(newBlurb);
+        input.value = "";
+    }
+}
 </script>
 
 <script type="text/javascript" async src="//cdn.credly.com/assets/utilities/embed.js"></script>
+<section id="community-section" style="padding: 60px 20px; max-width: 1000px; width: 100%; text-align: center; border-top: 1px solid #222;">
+    <h2 style="font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #415a77; margin-bottom: 30px;">Community Feedback</h2>
+    
+    <div style="background: #0a0a0a; border: 1px solid #333; padding: 20px; border-radius: 12px; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <textarea id="comment-input" placeholder="Leave a tiny blurb..." style="width: 100%; background: transparent; border: none; color: #fff; outline: none; resize: none; font-family: inherit; margin-bottom: 10px;" rows="2"></textarea>
+        <div style="display: flex; justify-content: flex-end;">
+            <button onclick="addBlurb()" style="background: #415a77; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; text-transform: uppercase;">Post Blurb</button>
+        </div>
+    </div>
 
+    <div id="blurbs-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+        <div class="blurb-item" style="background: #111; border: 1px solid #222; padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #888; max-width: 200px; text-align: left; animation: fadeIn 1s ease-out;">
+            "Love the RAG implementation on the HCPCS engine!"
+        </div>
+    </div>
+</section>
 </body>
 </html>
