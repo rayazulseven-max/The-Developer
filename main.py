@@ -81,12 +81,14 @@ async def chat_bot(query: str, context: str = "portfolio"):
         {portfolio_context}
         
         INSTRUCTIONS:
-        1. Read the user's query and find the best matching service. Understand typos (like "customer").
-        2. If you find a match: Answer conversationally, state the price, and format the service name in <strong>bold</strong>.
+        1. Find the best matching service. Understand typos (like "customer" vs "custom").
+        2. If you find a match: Answer naturally, state the price, and bold the <strong>Name</strong>.
         3. If NO service matches: Politely suggest they fill out the Contact Form.
-        4. HYPERLINKING: Always wrap the words "Contact Form" in this exact HTML tag: 
+        4. CONTACT LINK: Always wrap "Contact Form" in: 
            <a href="#" onclick="openModal(); return false;" style="color: #415a77; text-decoration: underline; font-weight: bold;">Contact Form</a>
-        5. Keep the response under 3 sentences. Do NOT use markdown outside of the requested HTML tags.
+        5. ORDER LINK: If a match is found, add a second link that says "Order [Name] Now" using:
+           <a href="#" onclick="openOrderModal('[Name]'); return false;" style="color: #2e7d32; text-decoration: underline; font-weight: bold; margin-left: 10px;">Order [Name] Now</a>
+        6. Keep the response under 3 sentences. Do NOT use markdown outside of HTML tags.
         """
         
         try:
