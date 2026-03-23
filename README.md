@@ -1,5 +1,7 @@
 # Ray Azul Perez | Interactive AI Portfolio & Dual-Route RAG Architecture
 
+**[🚀 View Live Demo Here](https://rayazulseven-max.github.io/The-Developer/)**
+
 This repository contains the source code for my interactive portfolio and suite of AI-driven web applications. It demonstrates full-stack development, combining responsive, framework-agnostic frontend engineering with a high-throughput FastAPI backend. 
 
 The core feature of this platform is a **Dual-Route Retrieval-Augmented Generation (RAG) pipeline** powered by Google's Gemini 2.5 Flash model.
