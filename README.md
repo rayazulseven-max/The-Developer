@@ -37,3 +37,7 @@ The AI operates beyond simple text generation; it acts as a functional UI naviga
 * **Frontend:** Zero-dependency Native JavaScript (ES6+), HTML5, CSS3 (Architected for sub-second latency and cross-device responsiveness)
 * **Deployment:** Render (Backend API), GitHub Pages (Frontend Edge Delivery)
 * **Data Layer:** JSON Document Stores, REST API Integration
+
+
+
+## **Author**: Ray Azul Perez | AI Developer • Data Analyst • UI Engineer
