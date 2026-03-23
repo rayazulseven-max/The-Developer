@@ -1,6 +1,6 @@
 # Ray Azul Perez | Interactive AI Portfolio & Dual-Route RAG Architecture
 
-**[🚀 View Live Demo Here](https://rayazulseven-max.github.io/The-Developer/)**
+## **[🚀 View Live Demo Here](https://rayazulseven-max.github.io/The-Developer/)**
 
 This repository contains the source code for my interactive portfolio and suite of AI-driven web applications. It demonstrates full-stack development, combining responsive, framework-agnostic frontend engineering with a high-throughput FastAPI backend. 
 
