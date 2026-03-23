@@ -1,7 +1,8 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from rapidfuzz import process, fuzz
+from pydantic import BaseModel
+from typing import List
 import json
 import datetime
 import re  
@@ -17,6 +18,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# --- MODELS FOR DATA ---
+class ChatMessage(BaseModel):
+    role: str 
+    parts: List[dict] 
+
+class ChatRequest(BaseModel):
+    query: str
+    history: List[ChatMessage] = []
+    context: str = "portfolio"
+
+# --- LOAD DATABASES ---
 with open('services.json', 'r') as f:
     services_db = json.load(f)
 
@@ -24,6 +36,7 @@ with open('hcpcs.json', 'r') as f:
     hcpcs_db = json.load(f)
 
 # We only need RapidFuzz lists for the massive Medical Database now!
+from rapidfuzz import process, fuzz
 hcpcs_search_list = []
 for item in hcpcs_db:
     tags = " ".join(item.get('tags', []))
@@ -32,25 +45,27 @@ for item in hcpcs_db:
 
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-
 # ==========================================
-# 3. THE DUAL-ROUTING ENDPOINT
+# 3. THE DUAL-ROUTING ENDPOINT (NOW POST)
 # ==========================================
-@app.get("/chat")
-async def chat_bot(query: str, context: str = "portfolio"):
-    query_lower = query.lower()
+@app.post("/chat")
+async def chat_bot(request: ChatRequest):
+    query_lower = request.query.lower()
     
     with open("chat_logs.txt", "a") as log_file:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_file.write(f"[{timestamp}] Context: [{context.upper()}] | User Asked: {query}\n")
+        log_file.write(f"[{timestamp}] Context: [{request.context.upper()}] | User Asked: {request.query}\n")
+
+    # Convert Pydantic history objects back into plain dictionaries for the SDK
+    formatted_history = [msg.model_dump() for msg in request.history]
 
     # ==========================================
     # ROUTE A: CLINICAL (RapidFuzz + Strict Matching)
     # ==========================================
-    if context == "medical":
+    if request.context == "medical":
         exact_code_pattern = r"^[a-zA-Z]\d{4}$"
-        if re.match(exact_code_pattern, query.strip()):
-            matched_code = query.strip().upper()
+        if re.match(exact_code_pattern, request.query.strip()):
+            matched_code = request.query.strip().upper()
             for item in hcpcs_db:
                 if item['code'] == matched_code:
                     price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
@@ -65,17 +80,15 @@ async def chat_bot(query: str, context: str = "portfolio"):
         
         return {"response": "I couldn't find a direct clinical match. Please verify the supply name, drug, or HCPCS code.", "match": False}
 
-
     # ==========================================
-    # ROUTE B: PORTFOLIO (Full Gemini 2.5 Brain)
+    # ROUTE B: PORTFOLIO (Full Gemini 2.5 Brain with Memory)
     # ==========================================
     else:
-        # We hand Gemini the ENTIRE menu and let it do the routing natively
         portfolio_context = json.dumps(services_db)
 
-        system_prompt = f"""
+        # Your exact 6 instructions, now used as the System Instruction for the chat session
+        sys_instructions = f"""
         You are Azul-Bot, the professional sales agent for Ray Azul Perez.
-        The user asked: "{query}"
         
         Here is Ray's ENTIRE list of available services:
         {portfolio_context}
@@ -92,11 +105,17 @@ async def chat_bot(query: str, context: str = "portfolio"):
         """
         
         try:
-            response = client.models.generate_content(
+            # Create the chat session with the history we received from the frontend
+            chat = client.chats.create(
                 model='gemini-2.5-flash',
-                contents=system_prompt
+                config={'system_instruction': sys_instructions},
+                history=formatted_history
             )
+            
+            # Send the new message to the chat object
+            response = chat.send_message(request.query)
             return {"response": response.text, "match": True}
+            
         except Exception as e:
             return {"response": f"<strong>Gemini Error:</strong> {str(e)}", "match": False}
 
