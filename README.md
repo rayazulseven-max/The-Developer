@@ -1,39 +1,37 @@
-# Auto-CS-Agent // Full-Stack Developer Portfolio
+# Ray Azul Perez | Interactive AI Portfolio & Dual-Route RAG Architecture
 
-Welcome to the central repository for my professional portfolio and the **Azul-Bot Sales Agent**. This project demonstrates the intersection of raw data, machine learning, and human-centric UI design.
+This repository contains the source code for my interactive portfolio and suite of AI-driven web applications. It demonstrates full-stack development, combining responsive, framework-agnostic frontend engineering with a high-throughput FastAPI backend. 
 
-## 🚀 Live Demos
-* **Portfolio Site**: [rayazulseven-max.github.io/The-Developer/index.html](https://rayazulseven-max.github.io/The-Developer/index.html)
-* **API Backend**: Hosted on **Render** (Python 3 environment)
+The core feature of this platform is a **Dual-Route Retrieval-Augmented Generation (RAG) pipeline** powered by Google's Gemini 2.5 Flash model.
 
-## 🛠 Tech Stack
-* **Backend**: Python, FastAPI, Uvicorn
-* **Intelligence**: `rapidfuzz` for semantic service matching and intent classification
-* **Data Layer**: Modular JSON-based databases for services and media
-* **Frontend**: Responsive HTML5, CSS3 (Modern Dark Mode UI), and Vanilla JavaScript
-* **Core Concepts**: RAG (Retrieval-Augmented Generation) Architecture, UI/UX Design, and Data Analytics
+## 🧠 System Architecture & Telemetry
 
-## ✨ Key Features
+The backend operates on a context-aware routing protocol. Depending on the endpoint called by the frontend UI, the API dynamically swaps its JSON vector approximations, system instructions, and LLM persona. 
 
-### 1. Azul-Bot // Automated Sales Agent
-An intelligent chatbot that parses a modular JSON database to provide dynamic quotes and service information.
-* **Intent Recognition**: Uses `fuzz.WRatio` to interpret user queries and map them to specific service packages.
-* **Real-time Interaction**: Connects to a FastAPI backend to deliver instant, context-aware responses.
+**Observability:** The system includes built-in telemetry, persistently writing user queries and context triggers to a local audit log. This creates a data trail for gap analysis, allowing for continuous iteration of the product catalog and prompt engineering based on real-world user intent.
 
-### 2. Dynamic Media Catalog
-A data-driven web application featuring:
-* **JSON Parsing**: Dynamically loads tracks and metadata from a centralized `songs.json` database.
-* **Algorithmic Filtering**: Custom multi-select filtering logic for genres and tags.
-* **Integrated Playback**: Custom audio playback architecture.
+## 🛡️ Key Engineering Highlights
 
-## 📂 Repository Structure
-* `main.py`: The FastAPI backend powering the chatbot logic.
-* `services.json`: The database for AI, automation, and data analytics services.
-* `index.html`: The primary landing page showcasing core credentials and project cards.
-* `requirements.txt`: Necessary Python dependencies for server-side deployment.
+### 1. Strict Context-Grounding (Zero Hallucination)
+In medical and enterprise environments, AI hallucinations carry significant liability. This system utilizes strict system prompts to constrain the LLM exclusively to the provided JSON arrays. If a user asks the Clinical Bot about Medicaid coverage or the Sales Bot for a rocket ship, the system is programmed to explicitly refuse the out-of-domain query and trigger a fallback lead-generation funnel.
 
-## 🛡 Security & Protection
-The frontend includes active IP protection scripts to disable unauthorized context menus and source inspections.
+### 2. Stateful Conversational Memory
+The application upgrades standard stateless REST APIs by maintaining a rolling, asynchronous chat-history array on the client side. This payload is passed via `POST` request to the backend, enabling the AI to maintain context, understand compound queries, and process conversational follow-ups seamlessly across multiple turns.
 
----
-**Author**: Ray Azul Perez | AI Developer • Data Analyst • UI Engineer
+### 3. Dynamic UI Integration
+The AI operates beyond simple text generation; it acts as a functional UI navigator. The backend is instructed to output specific HTML anchor tags embedded with JavaScript triggers. This allows the AI to proactively open modals and auto-fill forms for the user, bridging the gap between conversational AI and traditional e-commerce funnels.
+
+## 📂 Project Suite Overview
+
+* **Automated Sales Agent (`services.html`):** An interactive e-commerce environment featuring a modular JSON database parsed by an intelligent RAG chatbot for dynamic service quoting and lead capture.
+* **Clinical Search Engine (`hcpcs.html`):** Grounded in AAPC professional coding standards, this tool parses HCPCS Level II codes and maps descriptive lay-terms. It utilizes a strict confidence threshold for semantic matches to ensure clinical data integrity.
+* **Dynamic Media Catalog (`music.html`):** A responsive, data-driven web application featuring custom JSON parsing, multi-select algorithmic filtering, and an integrated audio playback architecture.
+* **Command Override System (`index.html`):** Features a hidden, passkey-protected admin modal connected to a RESTful endpoint for real-time CRUD operations on community feedback.
+
+## 🛠️ Tech Stack
+
+* **Backend:** Python, FastAPI, Pydantic, Uvicorn (Optimized for asynchronous request handling)
+* **AI/LLM:** Google GenAI SDK (`gemini-2.5-flash`)
+* **Frontend:** Zero-dependency Native JavaScript (ES6+), HTML5, CSS3 (Architected for sub-second latency and cross-device responsiveness)
+* **Deployment:** Render (Backend API), GitHub Pages (Frontend Edge Delivery)
+* **Data Layer:** JSON Document Stores, REST API Integration
