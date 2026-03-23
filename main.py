@@ -60,26 +60,40 @@ async def chat_bot(request: ChatRequest):
     formatted_history = [msg.model_dump() for msg in request.history]
 
     # ==========================================
-    # ROUTE A: CLINICAL (RapidFuzz + Strict Matching)
+    # ROUTE A: CLINICAL (Full Gemini 2.5 Brain with Memory)
     # ==========================================
     if request.context == "medical":
-        exact_code_pattern = r"^[a-zA-Z]\d{4}$"
-        if re.match(exact_code_pattern, request.query.strip()):
-            matched_code = request.query.strip().upper()
-            for item in hcpcs_db:
-                if item['code'] == matched_code:
-                    price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
-                    return {"response": f"<strong>{item['code']}</strong> ({item['category']}): {item['description']} <br><strong>Est. Cost: {price}</strong>", "match": True}
-        
-        best_match = process.extractOne(query_lower, hcpcs_search_list, scorer=fuzz.token_set_ratio)
-        if best_match and best_match[1] > 65:
-            match_index = best_match[2] 
-            item = hcpcs_db[match_index]
-            price = f"${item['price_estimate']:.2f}" if item['price_estimate'] > 0 else "Pricing Varies"
-            return {"response": f"Clinical Match Found: <strong>{item['code']}</strong> ({item['category']}). {item['description']} <br><strong>Est. Cost: {price}</strong>", "match": True}
-        
-        return {"response": "I couldn't find a direct clinical match. Please verify the supply name, drug, or HCPCS code.", "match": False}
+        medical_context = json.dumps(hcpcs_db)
 
+        # We give the Clinical bot its own distinct persona and instructions
+        sys_instructions = f"""
+        You are Azul Clinical AI, a professional medical coding and supply assistant.
+        
+        Here is your ENTIRE database of available HCPCS codes, drugs, and supplies:
+        {medical_context}
+        
+        INSTRUCTIONS:
+        1. Find the best matching clinical item(s) for the user's request. Understand typos, layman's terms, and conversational follow-ups.
+        2. If the user asks for multiple items (e.g., "a walker and a monitor"), find and list ALL of them.
+        3. If you find a match, format EACH item exactly like this:
+           <div style="margin-bottom: 10px;">Clinical Match Found: <strong>[Code]</strong> ([Category]). [Description] <br><strong>Est. Cost: $[Price]</strong></div>
+        4. If NO item matches: Politely state that you cannot find a direct clinical match in the current database.
+        5. Keep responses concise and clinical. Do NOT use markdown outside of the requested HTML tags.
+        """
+        
+        try:
+            chat = client.chats.create(
+                model='gemini-2.5-flash',
+                config={'system_instruction': sys_instructions},
+                history=formatted_history
+            )
+            
+            response = chat.send_message(request.query)
+            return {"response": response.text, "match": True}
+            
+        except Exception as e:
+            return {"response": f"<strong>System Error:</strong> {str(e)}", "match": False}
+            
     # ==========================================
     # ROUTE B: PORTFOLIO (Full Gemini 2.5 Brain with Memory)
     # ==========================================
